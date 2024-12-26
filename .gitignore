@@ -9,3 +9,7 @@ frontend/build
 backend/dist
 
 **/.vscode
+
+**/.env
+
+**.pdf

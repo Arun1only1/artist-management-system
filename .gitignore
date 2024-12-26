@@ -1,0 +1,11 @@
+# Node modules
+**/node_modules
+
+# Logs
+**/logs
+
+# Build directories
+frontend/build
+backend/dist
+
+**/.vscode

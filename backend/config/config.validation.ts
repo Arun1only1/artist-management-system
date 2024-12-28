@@ -8,21 +8,14 @@ export const configValidationSchema = Joi.object({
 
   API_PORT: Joi.number().default(8080),
 
-  SYSTEM_LANGUAGE: Joi.string().required(),
+  SYSTEM_LANGUAGE: Joi.string().required().trim(),
 
-  //   MONGO_DB_LOCAL: Joi.string(),
-
-  //   MONGO_DB_DEV: Joi.alternatives().conditional('NODE_ENV', {
-  //     is: 'dev',
-  //     then: Joi.string().required(),
-  //     otherwise: Joi.string().optional(),
-  //   }),
-
-  //   MONGO_DB_PROD: Joi.alternatives().conditional('NODE_ENV', {
-  //     is: 'prod',
-  //     then: Joi.string().required(),
-  //     otherwise: Joi.string().optional(),
-  //   }),
+  DB_TYPE: Joi.string().required().trim(),
+  DB_HOST: Joi.string().required().trim(),
+  DB_PORT: Joi.number().required(),
+  DB_USERNAME: Joi.string().required().trim(),
+  DB_PASSWORD: Joi.string().required().trim(),
+  DB_DATABASE: Joi.string().required().trim(),
 
   // tokens
   //   JWT_ACCESS_TOKEN_SECRET: Joi.string().required(),

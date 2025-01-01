@@ -2,7 +2,10 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
 import ReactQueryClientProvider from '@/providers/ReactQueryClientProvider';
+import ReduxToolkitProvider from '@/providers/ReduxToolkitProvider';
+
 import './globals.css';
+import CustomSnackbar from '@/components/CustomSnackbar';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -26,13 +29,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <ReactQueryClientProvider>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          {children}
-        </body>
-      </ReactQueryClientProvider>
+      <ReduxToolkitProvider>
+        <ReactQueryClientProvider>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+            <CustomSnackbar />
+            {children}
+          </body>
+        </ReactQueryClientProvider>
+      </ReduxToolkitProvider>
     </html>
   );
 }

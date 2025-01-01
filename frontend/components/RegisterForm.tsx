@@ -1,9 +1,11 @@
 'use client';
 import { useState } from 'react';
 
-import { Formik } from 'formik';
 import dayjs from 'dayjs';
+import { Formik } from 'formik';
 
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   Box,
   Button,
@@ -19,19 +21,23 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-import { registerUserValidationSchema } from '@/validation-schema/register.user.validation.schema';
 import { genderOptions, roleOptions } from '@/constant/general.constant';
-import { useMutation } from '@tanstack/react-query';
 import { registerUser } from '@/lib/api-routes/auth.routes';
-import { useRouter } from 'next/navigation';
+import {
+  openErrorSnackbar,
+  openSuccessSnackbar,
+} from '@/store/slices/snackbarSlice';
+import { getMessageFromError } from '@/utils/get.message.from.error';
+import { registerUserValidationSchema } from '@/validation-schema/register.user.validation.schema';
+import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
 
 export interface UserProps {
   firstName: string;
@@ -47,6 +53,7 @@ export interface UserProps {
 // register form
 const RegisterForm = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -70,10 +77,13 @@ const RegisterForm = () => {
     mutationFn: async (values: UserProps) => {
       return await registerUser(values);
     },
-    onSuccess: () => {
+    onSuccess: (res) => {
       router.push('/login');
+      dispatch(openSuccessSnackbar({ message: res?.data?.message }));
     },
-    onError: () => {},
+    onError: (error) => {
+      dispatch(openErrorSnackbar({ message: getMessageFromError(error) }));
+    },
   });
   return (
     <Box>

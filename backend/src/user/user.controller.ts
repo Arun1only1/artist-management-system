@@ -1,13 +1,23 @@
-import { Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
 
-import { Permissions } from 'src/decorators/permission.decorator';
+import Lang from 'src/constants/language';
 import { AuthorizationGuard } from 'src/guards/authorization.guard';
+import { IdFromParamsInput } from 'src/artist/dto/input/id.params.input';
+import { Permissions } from 'src/decorators/permission.decorator';
 
 import { Action } from './enum/action.enum';
 import { Resource } from './enum/resource.enum';
+import { UpdateUserInput } from './dto/input/update.user.input';
 import { UserService } from './service/user.service';
-import { IdFromParamsInput } from 'src/artist/dto/input/id.params.input';
-import Lang from 'src/constants/language';
+import { UserId } from 'src/decorators/user.id.decorator';
 
 @UseGuards(AuthorizationGuard)
 @Controller('user')
@@ -23,11 +33,27 @@ export class UserController {
 
   @Permissions([{ resource: Resource.USER, actions: [Action.DELETE] }])
   @Delete('/delete/:id')
-  async deleteUser(@Param() param: IdFromParamsInput) {
+  async deleteUser(
+    @Param() param: IdFromParamsInput,
+    @UserId() deleterId: string,
+  ) {
     const { id: userId } = param;
 
-    await this.userService.deleteUserById(userId);
+    await this.userService.deleteUserById(userId, deleterId);
 
     return { message: Lang.USER_DELETED };
+  }
+
+  @Permissions([{ resource: Resource.USER, actions: [Action.UPDATE] }])
+  @Patch('/edit/:id')
+  async updateUser(
+    @Param() param: IdFromParamsInput,
+    @Body() updateUserInput: UpdateUserInput,
+  ) {
+    const { id: userId } = param;
+
+    await this.userService.updateUser(userId, updateUserInput);
+
+    return { message: Lang.USER_UPDATED };
   }
 }

@@ -14,6 +14,8 @@ const responseMessages = {
     USER_NOT_EXIST: 'User with the provided email does not exist.',
     USER_CREATED: 'User is created successfully.',
     USER_DELETED: 'User is deleted successfully.',
+    USER_UPDATED: 'User is updated successfully.',
+    CANNOT_DELETE_YOURSELF: 'You cannot delete yourself.',
 
     // login
     INVALID_CREDENTIALS: 'Invalid credentials.',

@@ -19,3 +19,18 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@layer utilities {
+  .form {
+    @apply flex flex-col justify-center items-center w-[400px] shadow-2xl
+    shadow-slate-500 px-8 py-4  rounded-md gap-4;
+  }
+
+  .card-center {
+    @apply flex flex-row flex-wrap gap-8 justify-center items-center my-12;
+  }
+
+  .screen-center {
+    @apply w-screen h-screen flex justify-center items-center;
+  }
+}

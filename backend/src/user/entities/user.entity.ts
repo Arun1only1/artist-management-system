@@ -1,5 +1,10 @@
 import * as bcrypt from 'bcrypt';
 import {
+  ARTIST,
+  ARTIST_MANAGER,
+  SUPER_ADMIN,
+} from 'src/constants/user.role.constants';
+import {
   BeforeInsert,
   Column,
   CreateDateColumn,
@@ -7,18 +12,20 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Gender, UserRole } from './user.enum';
+import { Gender } from '../user.enum';
 
 @Entity('user')
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column({})
-  first_name: string;
+  @Column({
+    name: 'first_name',
+  })
+  firstName: string;
 
-  @Column()
-  last_name: string;
+  @Column({ name: 'last_name' })
+  lastName: string;
 
   @Column({
     unique: true,
@@ -34,7 +41,10 @@ export class User {
   @Column({ type: 'timestamp' })
   dob: Date;
 
-  @Column({ type: 'enum', enum: UserRole })
+  @Column({
+    type: 'enum',
+    enum: [SUPER_ADMIN, ARTIST_MANAGER, ARTIST],
+  })
   role: string;
 
   @Column({ type: 'enum', enum: Gender })

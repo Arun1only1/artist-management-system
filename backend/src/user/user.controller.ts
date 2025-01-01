@@ -1,22 +1,18 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserInput } from './dto/input/create.user.input';
+import { Permissions } from 'src/auth/decorators/permission.decorator';
+import { AuthorizationGuard } from 'src/auth/guards/authorization.guard';
+import { READ, USER } from 'src/constants/user.role.constants';
 
-@Controller()
+@UseGuards(AuthorizationGuard)
+@Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post('/user/create')
-  async createUser(
-    @Body() userData: CreateUserInput,
-  ): Promise<{ message: string }> {
-    console.log(userData);
-    await this.userService.createUser(userData);
-    return { message: 'User is created successfully.' };
-  }
-
-  @Get('/user/list')
-  async getUser() {
-    return await this.userService.getUser();
+  @Permissions([{ resource: USER, actions: [READ] }])
+  @Get('/list')
+  async getAllUsers() {
+    const users = await this.userService.getAllUsers();
+    return { message: 'success', userList: users };
   }
 }

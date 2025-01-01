@@ -44,7 +44,7 @@ export class CreateUserInput {
 
   @IsEnum(UserRole)
   @IsNotEmpty({ message: 'Role is required.' })
-  role: string;
+  roleId: number;
 
   @IsEnum(Gender)
   @IsNotEmpty({ message: 'Gender is required.' })

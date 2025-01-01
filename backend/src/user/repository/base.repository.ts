@@ -9,4 +9,8 @@ export class BaseRepository {
     const data = this.collectionName.create(value);
     await this.collectionName.save(data);
   }
+
+  async deleteData(id: string) {
+    await this.collectionName.delete(id);
+  }
 }

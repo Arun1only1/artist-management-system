@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { AuthGuard } from './auth/guards/auth.guard';
 import { TokenModule } from './token/token.module';
 import { UserModule } from './user/user.module';
+import { SongModule } from './song/song.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { UserModule } from './user/user.module';
     AuthModule,
     TokenModule,
     ArtistModule,
+    SongModule,
   ],
   controllers: [AppController],
   providers: [

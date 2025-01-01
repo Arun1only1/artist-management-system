@@ -2,11 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { Gender } from 'src/user/user.enum';
+import { Song } from 'src/song/entities/song.entity';
 
 @Entity('artist')
 export class Artist {
@@ -36,6 +38,9 @@ export class Artist {
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
   created_at: Date;
+
+  @OneToMany(() => Song, (song) => song.artist, { cascade: true })
+  songs: Song[];
 
   @UpdateDateColumn({
     type: 'timestamp',

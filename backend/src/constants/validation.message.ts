@@ -35,6 +35,9 @@ const validationMessages = {
     PROVIDE_VALID_GENDER_VALUE:
       'Provide valid gender value which is either male or female or others.',
 
+    // song
+    PROVIDE_VALID_SONG_GENRE:
+      'Please provide valid song genre: rnb/country,classic,rock,jazz.',
     // year
     PROVIDE_VALID_YEAR: 'Please provide valid year.',
     PROVIDE_VALID_NUMBER: 'Please provide valid number.',

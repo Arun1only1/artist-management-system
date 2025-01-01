@@ -17,4 +17,12 @@ export class BaseRepository {
   async updateData(id: string, value: any) {
     await this.collectionName.update(id, value);
   }
+
+  async findDataById(id: string) {
+    return await this.collectionName.findOne({ where: { id } });
+  }
+
+  async findData(condition: any) {
+    return await this.collectionName.find({ where: condition });
+  }
 }

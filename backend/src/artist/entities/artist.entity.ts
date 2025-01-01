@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Gender } from 'src/user/user.enum';
+import { Gender } from 'src/user/enum/gender.enum';
 import { Song } from 'src/song/entities/song.entity';
 
 @Entity('artist')

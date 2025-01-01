@@ -8,7 +8,8 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { Gender, UserRole } from 'src/user/user.enum';
+import { Gender } from 'src/user/enum/gender.enum';
+import { UserRole } from 'src/user/enum/user.role.enum';
 
 export class CreateUserInput {
   @MaxLength(50, { message: 'First name must be at max 50 characters.' })
@@ -44,7 +45,7 @@ export class CreateUserInput {
 
   @IsEnum(UserRole)
   @IsNotEmpty({ message: 'Role id is required.' })
-  roleId: number;
+  role: UserRole;
 
   @IsEnum(Gender)
   @IsNotEmpty({ message: 'Gender is required.' })

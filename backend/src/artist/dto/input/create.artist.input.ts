@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 
 import MSG from 'src/constants/validation.message';
-import { Gender } from 'src/user/user.enum';
+import { Gender } from 'src/user/enum/gender.enum';
 
 export class CreateArtistInput {
   @MaxLength(100, { message: MSG.PROPERTY_MAX_LENGTH })

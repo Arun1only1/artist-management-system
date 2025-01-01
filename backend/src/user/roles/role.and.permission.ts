@@ -1,57 +1,54 @@
-import {
-  ARTIST,
-  ARTIST_MANAGER,
-  CREATE,
-  DELETE,
-  EXPORT_CSV,
-  IMPORT_CSV,
-  READ,
-  SONG,
-  SUPER_ADMIN,
-  UPDATE,
-  USER,
-} from 'src/constants/user.role.constants';
+import { Action } from '../enum/action.enum';
+import { Resource } from '../enum/resource.enum';
+import { UserRole } from '../enum/user.role.enum';
 
 export interface Permission {
-  resource: string;
-  actions: string[];
+  resource: Resource;
+  actions: Action[];
 }
 
-export interface UserRole {
-  name: string;
+export interface UserRoleAndPermission {
+  name: UserRole;
   permissions: Permission[];
 }
 
-export const userRoles: UserRole[] = [
+export const userRoles: UserRoleAndPermission[] = [
   {
-    name: SUPER_ADMIN,
+    name: UserRole.SUPER_ADMIN,
     permissions: [
       {
-        resource: USER,
-        actions: [CREATE, READ, UPDATE, DELETE],
+        resource: Resource.USER,
+        actions: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE],
       },
-      { resource: ARTIST, actions: [READ] },
-      { resource: SONG, actions: [READ] },
+      { resource: Resource.ARTIST, actions: [Action.READ] },
+      { resource: Resource.SONG, actions: [Action.READ] },
     ],
   },
 
   {
-    name: ARTIST_MANAGER,
+    name: UserRole.ARTIST_MANAGER,
     permissions: [
       {
-        resource: ARTIST,
-        actions: [CREATE, READ, UPDATE, DELETE, IMPORT_CSV, EXPORT_CSV],
+        resource: Resource.ARTIST,
+        actions: [
+          Action.CREATE,
+          Action.READ,
+          Action.UPDATE,
+          Action.DELETE,
+          Action.IMPORT_CSV,
+          Action.EXPORT_CSV,
+        ],
       },
-      { resource: SONG, actions: [READ] },
+      { resource: Resource.SONG, actions: [Action.READ] },
     ],
   },
 
   {
-    name: ARTIST,
+    name: UserRole.ARTIST,
     permissions: [
       {
-        resource: SONG,
-        actions: [CREATE, READ, UPDATE, DELETE],
+        resource: Resource.SONG,
+        actions: [Action.CREATE, Action.READ, Action.UPDATE, Action.DELETE],
       },
     ],
   },

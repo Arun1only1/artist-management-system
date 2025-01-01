@@ -22,7 +22,7 @@ body {
 
 @layer utilities {
   .form {
-    @apply flex flex-col justify-center items-center w-[400px] shadow-2xl
+    @apply flex flex-col justify-center items-center w-[450px] shadow-2xl
     shadow-slate-500 px-8 py-4  rounded-md gap-4;
   }
 

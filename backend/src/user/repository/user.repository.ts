@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
 import { User } from '../entities/user.entity';
+import { BaseRepository } from './base.repository';
 
 @Injectable()
-export class UserRepository {
+export class UserRepository extends BaseRepository {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-  ) {}
-
-  async findById(id: string) {
-    return await this.userRepository.findOne({ where: { id } });
+  ) {
+    super(userRepository);
   }
 }

@@ -22,6 +22,10 @@ const responseMessages = {
     // artist
     ARTIST_CREATED: 'Artist is created successfully.',
     ARTIST_DELETED: 'Artist is deleted successfully.',
+    ARTIST_UPDATED: 'Artist is updated successfully.',
+
+    // uuid
+    INVALID_UUID: 'Invalid UUID parameter.',
   },
 };
 const lang = process.env.SYSTEM_LANGUAGE || 'EN';

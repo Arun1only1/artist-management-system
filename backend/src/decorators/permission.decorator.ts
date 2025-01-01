@@ -1,7 +1,7 @@
-// import { SetMetadata } from '@nestjs/common';
-// import { Permission } from 'src/roles/dto/input/create.role.dto';
+import { SetMetadata } from '@nestjs/common';
+import { Permission } from 'src/user/roles/role.and.permission';
 
-// export const Permissions = (permissions: Permission[]) =>
-//   SetMetadata('permissions', permissions);
+export const PERMISSION_KEY = 'Permissions';
 
-// // @Permissions([])
+export const Permissions = (permissions: Permission[]) =>
+  SetMetadata(PERMISSION_KEY, permissions);

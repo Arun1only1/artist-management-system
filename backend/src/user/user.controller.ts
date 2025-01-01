@@ -1,6 +1,6 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { Permissions } from 'src/auth/decorators/permission.decorator';
+import { Permissions } from 'src/decorators/permission.decorator';
 import { AuthorizationGuard } from 'src/auth/guards/authorization.guard';
 import { READ, USER } from 'src/constants/user.role.constants';
 

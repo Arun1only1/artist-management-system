@@ -13,4 +13,8 @@ export class BaseRepository {
   async deleteData(id: string) {
     await this.collectionName.delete(id);
   }
+
+  async updateData(id: string, value: any) {
+    await this.collectionName.update(id, value);
+  }
 }

@@ -66,8 +66,8 @@ const RegisterForm = () => {
   //   register user mutation
   const { isPending, mutate } = useMutation({
     mutationKey: ['register-user'],
-    mutationFn: (values: UserProps) => {
-      return registerUser(values);
+    mutationFn: async (values: UserProps) => {
+      return await registerUser(values);
     },
     onSuccess: () => {
       router.push('/login');
@@ -204,7 +204,7 @@ const RegisterForm = () => {
                 <DemoContainer components={['DatePicker']}>
                   <DatePicker
                     onChange={(date) => {
-                      setFieldValue('dob', dayjs(date).format('DD/MM/YYYY'));
+                      setFieldValue('dob', dayjs(date).format('YYYY-MM-DD'));
                     }}
                     label='DOB'
                     className='w-full'

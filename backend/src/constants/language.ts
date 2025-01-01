@@ -28,6 +28,7 @@ const responseMessages = {
 
     // song
     SONG_CREATED: 'Song is created successfully.',
+    SONG_DELETED: 'Song is deleted successfully.',
   },
 };
 const lang = process.env.SYSTEM_LANGUAGE || 'EN';

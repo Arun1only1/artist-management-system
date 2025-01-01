@@ -7,7 +7,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ArtistModule } from './artist/artist.module';
 import { AuthModule } from './auth/auth.module';
-import { AuthGuard } from './auth/guards/auth.guard';
+import { AuthGuard } from './guards/auth.guard';
 import { TokenModule } from './token/token.module';
 import { UserModule } from './user/user.module';
 import { SongModule } from './song/song.module';

@@ -1,10 +1,5 @@
 import * as bcrypt from 'bcrypt';
 import {
-  ARTIST,
-  ARTIST_MANAGER,
-  SUPER_ADMIN,
-} from 'src/constants/user.role.constants';
-import {
   BeforeInsert,
   Column,
   CreateDateColumn,
@@ -12,6 +7,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import { UserRole } from '../enum/user.role.enum';
 import { Gender } from '../user.enum';
 
 @Entity('user')
@@ -43,12 +40,12 @@ export class User {
 
   @Column({
     type: 'enum',
-    enum: [SUPER_ADMIN, ARTIST_MANAGER, ARTIST],
+    enum: UserRole,
   })
-  role: string;
+  role: UserRole;
 
   @Column({ type: 'enum', enum: Gender })
-  gender: string;
+  gender: Gender;
 
   @Column()
   address: string;

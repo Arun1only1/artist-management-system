@@ -1,16 +1,15 @@
-import { LoginUserInput } from './dto/input/login.user.input';
-import { InjectRepository } from '@nestjs/typeorm';
-import { RegisterUserInput } from './dto/input/register.user.input';
 import {
   ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { User } from 'src/user/entities/user.entity';
-import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { TokenService } from 'src/token/token.service';
-import { SUPER_ADMIN } from 'src/constants/user.role.constants';
+import { User } from 'src/user/entities/user.entity';
+import { Repository } from 'typeorm';
+import { LoginUserInput } from './dto/input/login.user.input';
+import { RegisterUserInput } from './dto/input/register.user.input';
 
 @Injectable()
 export class AuthService {
@@ -34,7 +33,6 @@ export class AuthService {
 
     const data = this.userRepository.create({
       ...registerUserInput,
-      role: SUPER_ADMIN,
     });
 
     return await this.userRepository.save(data);

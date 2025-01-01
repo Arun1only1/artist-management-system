@@ -43,7 +43,7 @@ export class CreateUserInput {
   dob: Date;
 
   @IsEnum(UserRole)
-  @IsNotEmpty({ message: 'Role is required.' })
+  @IsNotEmpty({ message: 'Role id is required.' })
   roleId: number;
 
   @IsEnum(Gender)

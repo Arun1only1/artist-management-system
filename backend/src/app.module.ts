@@ -9,6 +9,7 @@ import { TokenModule } from './token/token.module';
 import { UserModule } from './user/user.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/guards/auth.guard';
+import { ArtistModule } from './artist/artist.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { AuthGuard } from './auth/guards/auth.guard';
     UserModule,
     AuthModule,
     TokenModule,
+    ArtistModule,
   ],
   controllers: [AppController],
   providers: [

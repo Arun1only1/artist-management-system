@@ -16,6 +16,9 @@ const validationMessages = {
     ARRAY_MUST_CONTAIN_UNIQUE_VALUES:
       '$property array must contain unique values.',
 
+    PROPERTY_MIN_VALUE: '$property must be minimum $constraint1.',
+    PROPERTY_MAX_VALUE: '$property must be maximum $constraint1.',
+
     //   email
     PROVIDE_VALID_EMAIL: 'Please provide valid email.',
 
@@ -30,6 +33,10 @@ const validationMessages = {
     // gender
     PROVIDE_VALID_GENDER_VALUE:
       'Provide valid gender value which is either male or female or others.',
+
+    // year
+    PROVIDE_VALID_YEAR: 'Please provide valid year.',
+    PROVIDE_VALID_NUMBER: 'Please provide valid number.',
   },
 };
 const lang = process.env.SYSTEM_LANGUAGE || 'EN';

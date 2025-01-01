@@ -25,9 +25,7 @@ export class Artist {
   @Column()
   address: string;
 
-  @Column({
-    length: 4,
-  })
+  @Column()
   first_release_year: number;
 
   @Column()

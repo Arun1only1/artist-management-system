@@ -20,7 +20,8 @@ const responseMessages = {
     INVALID_CREDENTIALS: 'Invalid credentials.',
 
     // artist
-    ARTIST_CREATED_SUCCESSFULLY: 'Artist is created successfully.',
+    ARTIST_CREATED: 'Artist is created successfully.',
+    ARTIST_DELETED: 'Artist is deleted successfully.',
   },
 };
 const lang = process.env.SYSTEM_LANGUAGE || 'EN';

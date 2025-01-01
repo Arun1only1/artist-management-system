@@ -31,6 +31,7 @@ import { genderOptions, roleOptions } from '@/constant/general.constant';
 import { useMutation } from '@tanstack/react-query';
 import { registerUser } from '@/lib/api-routes/auth.routes';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export interface UserProps {
   firstName: string;
@@ -95,7 +96,7 @@ const RegisterForm = () => {
         }}
       >
         {({ handleSubmit, getFieldProps, errors, touched, setFieldValue }) => (
-          <form onSubmit={handleSubmit} className='form'>
+          <form onSubmit={handleSubmit} className='form w-[450px] gap-4'>
             <Typography variant='h4'>Register</Typography>
             <FormControl fullWidth>
               <TextField
@@ -215,9 +216,20 @@ const RegisterForm = () => {
               </LocalizationProvider>
             </FormControl>
 
-            <Button fullWidth type='submit' variant='contained' color='success'>
-              Sign up
-            </Button>
+            <FormControl fullWidth className='flex justify-center items-center'>
+              <Button
+                fullWidth
+                type='submit'
+                variant='contained'
+                color='success'
+              >
+                Sign up
+              </Button>
+
+              <Link href='/login' className='text-blue-500 underline mt-3'>
+                Already registered? Login
+              </Link>
+            </FormControl>
           </form>
         )}
       </Formik>

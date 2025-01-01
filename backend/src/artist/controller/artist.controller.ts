@@ -29,7 +29,7 @@ export class ArtistController {
   ) {}
 
   @Permissions([{ resource: ARTIST, actions: [CREATE] }])
-  @Post('/create')
+  @Post('add')
   async createArtist(
     @Body() createArtistInput: CreateArtistInput,
   ): Promise<MessageResponse> {

@@ -1,7 +1,7 @@
 export enum Genre {
   RNB = 'rnb',
-  COUNTRY = 'Country',
-  CLASSIC = 'Classic',
-  ROCK = 'Rock',
-  JAZZ = 'Jazz',
+  COUNTRY = 'country',
+  CLASSIC = 'classic',
+  ROCK = 'rock',
+  JAZZ = 'jazz',
 }

@@ -22,7 +22,10 @@ export class BaseRepository {
     return await this.collectionName.findOne({ where: { id } });
   }
 
-  async findData(condition: any) {
-    return await this.collectionName.find({ where: condition });
+  async findDataWithRelations(condition: any, relationTable: string) {
+    return await this.collectionName.find(
+      { where: condition },
+      { relations: [relationTable] },
+    );
   }
 }

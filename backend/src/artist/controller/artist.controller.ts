@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { MessageResponse } from 'src/auth/dto/response/message.response';
-import { AuthorizationGuard } from 'src/auth/guards/authorization.guard';
+import { AuthorizationGuard } from 'src/guards/authorization.guard';
 import Lang from 'src/constants/language';
 import { CREATE, DELETE, UPDATE } from 'src/constants/user.role.constants';
 import { Permissions } from 'src/decorators/permission.decorator';

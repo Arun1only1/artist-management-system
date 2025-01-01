@@ -8,16 +8,16 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { MessageResponse } from 'src/auth/dto/response/message.response';
-import { AuthorizationGuard } from 'src/guards/authorization.guard';
 import Lang from 'src/constants/language';
-import { CREATE, DELETE, UPDATE } from 'src/constants/user.role.constants';
 import { Permissions } from 'src/decorators/permission.decorator';
+import { AuthorizationGuard } from 'src/guards/authorization.guard';
+import { Action } from 'src/user/enum/action.enum';
+import { Resource } from 'src/user/enum/resource.enum';
 import { CreateArtistInput } from '../dto/input/create.artist.input';
+import { IdFromParamsInput } from '../dto/input/id.params.input';
 import { CreateArtistService } from '../service/create.artist.service';
 import { DeleteArtistService } from '../service/delete.artist.service';
-import { ARTIST } from './../../constants/user.role.constants';
 import { UpdateArtistService } from './../service/update.artist.service';
-import { IdFromParamsInput } from '../dto/input/id.params.input';
 
 @UseGuards(AuthorizationGuard)
 @Controller('artist')
@@ -28,7 +28,7 @@ export class ArtistController {
     private readonly updateArtistService: UpdateArtistService,
   ) {}
 
-  @Permissions([{ resource: ARTIST, actions: [CREATE] }])
+  @Permissions([{ resource: Resource.ARTIST, actions: [Action.CREATE] }])
   @Post('add')
   async createArtist(
     @Body() createArtistInput: CreateArtistInput,
@@ -38,7 +38,7 @@ export class ArtistController {
     return { message: Lang.ARTIST_CREATED };
   }
 
-  @Permissions([{ resource: ARTIST, actions: [DELETE] }])
+  @Permissions([{ resource: Resource.ARTIST, actions: [Action.DELETE] }])
   @Delete('/delete/:id')
   async deleteArtist(
     @Param() param: IdFromParamsInput,
@@ -50,7 +50,7 @@ export class ArtistController {
     return { message: Lang.ARTIST_DELETED };
   }
 
-  @Permissions([{ resource: ARTIST, actions: [UPDATE] }])
+  @Permissions([{ resource: Resource.ARTIST, actions: [Action.UPDATE] }])
   @Put('/update/:id')
   async updateArtist(
     @Param() param: IdFromParamsInput,

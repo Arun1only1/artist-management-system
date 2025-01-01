@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 
 import { UserRole } from '../enum/user.role.enum';
-import { Gender } from '../user.enum';
+import { Gender } from '../enum/gender.enum';
 
 @Entity('user')
 export class User {

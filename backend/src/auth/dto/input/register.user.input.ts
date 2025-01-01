@@ -1,10 +1,7 @@
 import { IsDateString, IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { Gender } from 'src/user/user.enum';
-import {
-  ARTIST,
-  ARTIST_MANAGER,
-  SUPER_ADMIN,
-} from 'src/constants/user.role.constants';
+
+import { Gender } from 'src/user/enum/gender.enum';
+import { UserRole } from 'src/user/enum/user.role.enum';
 
 export class RegisterUserInput {
   @IsString()
@@ -33,6 +30,6 @@ export class RegisterUserInput {
 
   @IsString()
   @IsNotEmpty()
-  @IsEnum([SUPER_ADMIN, ARTIST_MANAGER, ARTIST])
-  role: string;
+  @IsEnum(UserRole)
+  role: UserRole;
 }

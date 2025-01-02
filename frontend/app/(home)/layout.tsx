@@ -4,8 +4,9 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import ReactQueryClientProvider from '@/providers/ReactQueryClientProvider';
 import ReduxToolkitProvider from '@/providers/ReduxToolkitProvider';
 
-import './globals.css';
 import CustomSnackbar from '@/components/CustomSnackbar';
+import '../globals.css';
+import Navbar from '@/components/Header';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -29,16 +30,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <ReduxToolkitProvider>
-        <ReactQueryClientProvider>
-          <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-          >
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <ReduxToolkitProvider>
+          <ReactQueryClientProvider>
             <CustomSnackbar />
+            <Navbar />
             {children}
-          </body>
-        </ReactQueryClientProvider>
-      </ReduxToolkitProvider>
+          </ReactQueryClientProvider>
+        </ReduxToolkitProvider>
+      </body>
     </html>
   );
 }

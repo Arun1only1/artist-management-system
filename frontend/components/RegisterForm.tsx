@@ -50,8 +50,12 @@ export interface UserProps {
   dob: string;
   gender: string;
 }
+
+interface RegisterFormProps {
+  name: string;
+}
 // register form
-const RegisterForm = () => {
+const RegisterForm = ({ name }: RegisterFormProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -107,7 +111,7 @@ const RegisterForm = () => {
       >
         {({ handleSubmit, getFieldProps, errors, touched, setFieldValue }) => (
           <form onSubmit={handleSubmit} className='form w-[450px] gap-4'>
-            <Typography variant='h4'>Register</Typography>
+            <Typography variant='h4'>{name}</Typography>
             <FormControl fullWidth>
               <TextField
                 label='First Name'
@@ -233,7 +237,7 @@ const RegisterForm = () => {
                 variant='contained'
                 color='success'
               >
-                Sign up
+                submit
               </Button>
 
               <Link href='/login' className='text-blue-500 underline mt-3'>

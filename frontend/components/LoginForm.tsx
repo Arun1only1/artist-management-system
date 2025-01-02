@@ -24,6 +24,10 @@ import { loginUserValidationSchema } from '@/validation-schema/login.user.valida
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useDispatch } from 'react-redux';
+import { openErrorSnackbar } from '@/store/slices/snackbarSlice';
+import { CustomError } from '@/interface/error.interface';
+import { getMessageFromError } from '@/utils/get.message.from.error';
 
 export interface LoginUserProps {
   email: string;
@@ -32,6 +36,8 @@ export interface LoginUserProps {
 // register form
 const LoginForm = () => {
   const router = useRouter();
+
+  const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -64,7 +70,9 @@ const LoginForm = () => {
 
       router.push('/');
     },
-    onError: () => {},
+    onError: (error: CustomError) => {
+      dispatch(openErrorSnackbar({ message: getMessageFromError(error) }));
+    },
   });
   return (
     <Box>

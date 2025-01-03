@@ -18,7 +18,6 @@ const responseMessages = {
 
     CANNOT_DELETE_YOURSELF: 'You cannot delete yourself.',
 
-
     // login
     INVALID_CREDENTIALS: 'Invalid credentials.',
 

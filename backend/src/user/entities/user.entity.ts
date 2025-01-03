@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import {
   BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -8,8 +9,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { UserRole } from '../enum/user.role.enum';
 import { Gender } from '../enum/gender.enum';
+import { UserRole } from '../enum/user.role.enum';
+import { USER_PASSWORD_MAX_LENGTH_IN_DB } from 'src/constants/general.constants';
 
 @Entity('user')
 export class User {
@@ -29,7 +31,9 @@ export class User {
   })
   email: string;
 
-  @Column()
+  @Column({
+    length: USER_PASSWORD_MAX_LENGTH_IN_DB,
+  })
   password: string;
 
   @Column()
@@ -65,6 +69,7 @@ export class User {
 
   // Hash the password before saving
   @BeforeInsert()
+  @BeforeUpdate()
   async hashPassword() {
     const saltRounds = 10;
     this.password = await bcrypt.hash(this.password, saltRounds);

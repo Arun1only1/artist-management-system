@@ -1,48 +1,31 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { UpdateUserInput } from '../dto/input/update.user.input';
+import { Injectable } from '@nestjs/common';
+import { Not } from 'typeorm';
+
+import { RegisterUserInput } from 'src/auth/dto/input/register.user.input';
+
 import { UserRepository } from '../repository/user.repository';
-import Lang from 'src/constants/language';
+import { PaginationInput } from './../dto/input/pagination.input';
 
 @Injectable()
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  // find users
-  async getAllUsers() {
-    return await this.userRepository.findAllData({});
+  async getAllUsers(paginationInput: PaginationInput, userId: string) {
+    return await this.userRepository.findDataUsingPagination(
+      { id: Not(userId) },
+      paginationInput,
+    );
   }
 
-  // delete user
-  async deleteUserById(userId: string, deleterId: string) {
-    if (userId === deleterId) {
-      throw new ForbiddenException(Lang.CANNOT_DELETE_YOURSELF);
-    }
-    const user = await this.userRepository.findDataById(userId);
-
-    if (!user) {
-      throw new NotFoundException(Lang.USER_NOT_EXIST);
-    }
-
+  async deleteUserById(userId: string) {
     return await this.userRepository.deleteById(userId);
   }
 
-  // find user by id
   async findUserById(userId: string) {
     return await this.userRepository.findDataById(userId);
   }
 
-  // update user
-  async updateUser(userId: string, value: UpdateUserInput) {
-    const user = await this.userRepository.findDataById(userId);
-
-    if (!user) {
-      throw new NotFoundException(Lang.USER_NOT_EXIST);
-    }
-
-    return await this.userRepository.updateData(userId, value);
+  async updateUserById(userId: string, updateUserInput: RegisterUserInput) {
+    return await this.userRepository.updateDataById(userId, updateUserInput);
   }
 }

@@ -34,4 +34,8 @@ body {
   .screen-center {
     @apply w-screen h-screen flex justify-center items-center;
   }
+
+  .div-center {
+    @apply w-full h-full flex justify-center items-center;
+  }
 }

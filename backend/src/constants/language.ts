@@ -15,7 +15,9 @@ const responseMessages = {
     USER_CREATED: 'User is created successfully.',
     USER_DELETED: 'User is deleted successfully.',
     USER_UPDATED: 'User is updated successfully.',
+
     CANNOT_DELETE_YOURSELF: 'You cannot delete yourself.',
+
 
     // login
     INVALID_CREDENTIALS: 'Invalid credentials.',

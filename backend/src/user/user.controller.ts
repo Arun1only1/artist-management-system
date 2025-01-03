@@ -2,9 +2,10 @@ import {
   Body,
   Controller,
   Delete,
+  Post,
+  Put,
   Get,
   Param,
-  Patch,
   UseGuards,
 } from '@nestjs/common';
 
@@ -13,11 +14,17 @@ import { AuthorizationGuard } from 'src/guards/authorization.guard';
 import { IdFromParamsInput } from 'src/artist/dto/input/id.params.input';
 import { Permissions } from 'src/decorators/permission.decorator';
 
+import { IdFromParamsInput } from 'src/artist/dto/input/id.params.input';
+import { RegisterUserInput } from 'src/auth/dto/input/register.user.input';
+import Lang from 'src/constants/language';
+import { UserId } from 'src/decorators/user.id.decorator';
+import { PaginationInput } from './dto/input/pagination.input';
 import { Action } from './enum/action.enum';
 import { Resource } from './enum/resource.enum';
 import { UpdateUserInput } from './dto/input/update.user.input';
 import { UserService } from './service/user.service';
 import { UserId } from 'src/decorators/user.id.decorator';
+
 
 @UseGuards(AuthorizationGuard)
 @Controller('user')
@@ -25,9 +32,12 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Permissions([{ resource: Resource.USER, actions: [Action.READ] }])
-  @Get('/list')
-  async getAllUsers() {
-    const users = await this.userService.getAllUsers();
+  @Post('/list')
+  async getAllUsers(
+    @Body() paginationInput: PaginationInput,
+    @UserId() userId: string,
+  ) {
+    const users = await this.userService.getAllUsers(paginationInput, userId);
     return { message: 'success', userList: users };
   }
 
@@ -45,14 +55,14 @@ export class UserController {
   }
 
   @Permissions([{ resource: Resource.USER, actions: [Action.UPDATE] }])
-  @Patch('/edit/:id')
+
+  @Put('/edit/:id')
   async updateUser(
     @Param() param: IdFromParamsInput,
-    @Body() updateUserInput: UpdateUserInput,
+    @Body() updateUserInput: RegisterUserInput,
   ) {
     const { id: userId } = param;
-
-    await this.userService.updateUser(userId, updateUserInput);
+    await this.userService.updateUserById(userId, updateUserInput);
 
     return { message: Lang.USER_UPDATED };
   }

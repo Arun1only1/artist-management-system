@@ -37,10 +37,13 @@ export class UserController {
 
   @Permissions([{ resource: Resource.USER, actions: [Action.DELETE] }])
   @Delete('/delete/:id')
-  async deleteUser(@Param() param: IdFromParamsInput) {
+  async deleteUser(
+    @Param() param: IdFromParamsInput,
+    @UserId() deleterId: string,
+  ) {
     const { id: userId } = param;
 
-    await this.userService.deleteUserById(userId);
+    await this.userService.deleteUserById(userId, deleterId);
 
     return { message: Lang.USER_DELETED };
   }

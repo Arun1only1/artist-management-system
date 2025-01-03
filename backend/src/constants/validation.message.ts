@@ -27,13 +27,14 @@ const validationMessages = {
     PROVIDE_VALID_PASSWORD:
       'Password must be minimum 8 characters with 1 uppercase, 1 lowercase, 1 number and 1 special characters.',
     PASSWORD_REQUIRED: 'Password is required.',
+    PASSWORD_WEAK: 'Password is weak.',
 
     // first name and last name
     NAME_MAX_LENGTH: '$property cannot be longer than $constraint1 characters.',
 
     // gender
     PROVIDE_VALID_GENDER_VALUE:
-      'Provide valid gender value which is either male or female or others.',
+      'Provide valid gender value which is either male(m) or female(f) or others(o).',
 
     // song
     PROVIDE_VALID_SONG_GENRE:
@@ -41,6 +42,13 @@ const validationMessages = {
     // year
     PROVIDE_VALID_YEAR: 'Please provide valid year.',
     PROVIDE_VALID_NUMBER: 'Please provide valid number.',
+
+    // dob
+    DOB_CANNOT_BE_FUTURE_DATE: 'DOB cannot be future date.',
+
+    // role
+    PROVIDE_VALID_USER_ROLE:
+      'Provide valid user role which is either super_admin or artist_manager or artist.',
   },
 };
 const lang = process.env.SYSTEM_LANGUAGE || 'EN';

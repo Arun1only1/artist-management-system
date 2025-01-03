@@ -1,13 +1,24 @@
-import { Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 
 import { Permissions } from 'src/decorators/permission.decorator';
 import { AuthorizationGuard } from 'src/guards/authorization.guard';
 
+import { IdFromParamsInput } from 'src/artist/dto/input/id.params.input';
+import { RegisterUserInput } from 'src/auth/dto/input/register.user.input';
+import Lang from 'src/constants/language';
+import { UserId } from 'src/decorators/user.id.decorator';
+import { PaginationInput } from './dto/input/pagination.input';
 import { Action } from './enum/action.enum';
 import { Resource } from './enum/resource.enum';
 import { UserService } from './service/user.service';
-import { IdFromParamsInput } from 'src/artist/dto/input/id.params.input';
-import Lang from 'src/constants/language';
 
 @UseGuards(AuthorizationGuard)
 @Controller('user')
@@ -15,9 +26,12 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Permissions([{ resource: Resource.USER, actions: [Action.READ] }])
-  @Get('/list')
-  async getAllUsers() {
-    const users = await this.userService.getAllUsers();
+  @Post('/list')
+  async getAllUsers(
+    @Body() paginationInput: PaginationInput,
+    @UserId() userId: string,
+  ) {
+    const users = await this.userService.getAllUsers(paginationInput, userId);
     return { message: 'success', userList: users };
   }
 
@@ -29,5 +43,17 @@ export class UserController {
     await this.userService.deleteUserById(userId);
 
     return { message: Lang.USER_DELETED };
+  }
+
+  @Permissions([{ resource: Resource.USER, actions: [Action.UPDATE] }])
+  @Put('/edit/:id')
+  async updateUser(
+    @Param() param: IdFromParamsInput,
+    @Body() updateUserInput: RegisterUserInput,
+  ) {
+    const { id: userId } = param;
+    await this.userService.updateUserById(userId, updateUserInput);
+
+    return { message: Lang.USER_UPDATED };
   }
 }

@@ -1,3 +1,4 @@
+import { PaginationInput } from './../dto/input/pagination.input';
 export class BaseRepository {
   private readonly collectionName;
 
@@ -14,7 +15,7 @@ export class BaseRepository {
     await this.collectionName.delete(id);
   }
 
-  async updateData(id: string, value: any) {
+  async updateDataById(id: string, value: any) {
     await this.collectionName.update(id, value);
   }
 
@@ -35,5 +36,22 @@ export class BaseRepository {
 
   async deleteById(id: string) {
     return await this.collectionName.delete(id);
+  }
+
+  async findDataUsingPagination(
+    condition: any = {},
+    paginationInput: PaginationInput,
+  ) {
+    const { page, limit } = paginationInput;
+
+    const skip = (page - 1) * limit;
+
+    const [result, total] = await this.collectionName.findAndCount({
+      where: condition,
+      take: limit,
+      skip,
+    });
+
+    return { result, total, totalPages: Math.ceil(total / limit) };
   }
 }

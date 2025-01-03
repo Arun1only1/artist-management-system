@@ -8,6 +8,6 @@ export class UpdateArtistService {
   constructor(private readonly artistRepository: ArtistRepository) {}
 
   async updateArtist(id: string, updateArtistInput: CreateArtistInput) {
-    return await this.artistRepository.updateData(id, updateArtistInput);
+    return await this.artistRepository.updateDataById(id, updateArtistInput);
   }
 }

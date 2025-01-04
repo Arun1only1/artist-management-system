@@ -36,6 +36,7 @@ const UserTable = () => {
   const { isPending, data } = useQuery({
     queryKey: ['get-user-list', page],
     queryFn: () => getUserList({ page, limit: 2 }),
+    // TODO:error handle
   });
 
   const userList: UserType[] = data?.data?.userList?.result;

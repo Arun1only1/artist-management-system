@@ -6,7 +6,6 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { SongRepository } from './../repository/song.repository';
 
 import Lang from 'src/constants/language';
 import { Permissions } from 'src/decorators/permission.decorator';
@@ -26,7 +25,6 @@ export class SongController {
   constructor(
     private readonly createSongService: CreateSongService,
     private readonly deleteSongService: DeleteSongService,
-    private readonly songRepository: SongRepository,
   ) {}
 
   @Permissions([{ resource: Resource.SONG, actions: [Action.CREATE] }])

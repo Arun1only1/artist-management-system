@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Post,
   Put,
@@ -58,5 +59,11 @@ export class UserController {
     await this.userService.updateUserById(userId, updateUserInput);
 
     return { message: Lang.USER_UPDATED };
+  }
+  @Permissions([{ resource: Resource.USER, actions: [Action.READ] }])
+  @Get('/details/:id')
+  async getUserDetails(@Param() param: IdFromParamsInput) {
+    const { id: userId } = param;
+    return await this.userService.findUserById(userId);
   }
 }

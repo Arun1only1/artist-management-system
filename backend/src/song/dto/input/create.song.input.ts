@@ -5,8 +5,7 @@ import {
   SONG_ALBUM_NAME_MAX_LENGTH,
   SONG_TITLE_MAX_LENGTH,
 } from 'src/constants/general.constants';
-
-import { Genre } from '../enum/genre.enum';
+import { Genre } from 'src/song/enum/genre.enum';
 
 export class CreateSongInput {
   @MaxLength(SONG_TITLE_MAX_LENGTH, { message: MSG.PROPERTY_MAX_LENGTH })

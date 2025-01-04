@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Not } from 'typeorm';
 
 import { RegisterUserInput } from 'src/auth/dto/input/register.user.input';
@@ -23,14 +27,24 @@ export class UserService {
       throw new ForbiddenException(Lang.CANNOT_DELETE_YOURSELF);
     }
 
+    await this.findUserById(userId);
+
     return await this.userRepository.deleteById(userId);
   }
 
   async findUserById(userId: string) {
-    return await this.userRepository.findDataById(userId);
+    const user = await this.userRepository.findDataById(userId);
+
+    if (!user) {
+      throw new NotFoundException(Lang.USER_NOT_EXIST);
+    }
+
+    return user;
   }
 
   async updateUserById(userId: string, updateUserInput: RegisterUserInput) {
+    await this.findUserById(userId);
+
     return await this.userRepository.updateDataById(userId, updateUserInput);
   }
 }

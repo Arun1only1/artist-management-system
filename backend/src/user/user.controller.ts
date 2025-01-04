@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Post,
   Put,
@@ -32,7 +33,8 @@ export class UserController {
     @UserId() userId: string,
   ) {
     const users = await this.userService.getAllUsers(paginationInput, userId);
-    return { message: 'success', userList: users };
+
+    return { message: Lang.SUCCESS, userList: users };
   }
 
   @Permissions([{ resource: Resource.USER, actions: [Action.DELETE] }])
@@ -55,8 +57,17 @@ export class UserController {
     @Body() updateUserInput: RegisterUserInput,
   ) {
     const { id: userId } = param;
+
     await this.userService.updateUserById(userId, updateUserInput);
 
     return { message: Lang.USER_UPDATED };
+  }
+
+  @Permissions([{ resource: Resource.USER, actions: [Action.READ] }])
+  @Get('/details/:id')
+  async getUserDetails(@Param() param: IdFromParamsInput) {
+    const { id: userId } = param;
+
+    return await this.userService.findUserById(userId);
   }
 }

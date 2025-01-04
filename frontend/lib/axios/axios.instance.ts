@@ -5,4 +5,14 @@ const $axios = axios.create({
   timeout: 10000,
 });
 
+// Add a request interceptor
+$axios.interceptors.request.use(function (config) {
+  const token = window.localStorage.getItem('token');
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export default $axios;

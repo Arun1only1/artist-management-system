@@ -43,8 +43,8 @@ export const snackbarSlice = createSlice({
       state.message =
         action?.payload?.message || ResponseMessage.SOMETHING_WENT_WRONG;
       state.severity = 'error';
-      state.vertical = 'top';
-      state.horizontal = 'center';
+      state.vertical = 'bottom';
+      state.horizontal = 'left';
     },
 
     closeSnackbar: (state) => {

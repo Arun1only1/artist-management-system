@@ -53,9 +53,10 @@ export interface UserProps {
 
 interface RegisterFormProps {
   name: string;
+  action: string;
 }
 // register form
-const RegisterForm = ({ name }: RegisterFormProps) => {
+const RegisterForm = ({ name, action }: RegisterFormProps) => {
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -82,7 +83,7 @@ const RegisterForm = ({ name }: RegisterFormProps) => {
       return await registerUser(values);
     },
     onSuccess: (res) => {
-      router.push('/login');
+      router.push(action === 'register' ? '/login' : '/');
       dispatch(openSuccessSnackbar({ message: res?.data?.message }));
     },
     onError: (error) => {

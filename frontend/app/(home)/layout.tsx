@@ -36,8 +36,10 @@ export default function RootLayout({
         <ReduxToolkitProvider>
           <ReactQueryClientProvider>
             <CustomSnackbar />
-            <Navbar />
-            {children}
+            <div className='flex flex-col gap-4'>
+              <Navbar />
+              {children}
+            </div>
           </ReactQueryClientProvider>
         </ReduxToolkitProvider>
       </body>

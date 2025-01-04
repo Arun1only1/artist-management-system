@@ -7,6 +7,6 @@ export const metadata: Metadata = {
   description: 'Artist management register page',
 };
 
-const Register = () => <RegisterForm name='Register' />;
+const Register = () => <RegisterForm name='Register' action='register' />;
 
 export default Register;

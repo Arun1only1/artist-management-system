@@ -3,6 +3,9 @@ const responseMessages = {
     // unauthorized
     UNAUTHORIZED: 'Unauthorized',
 
+    // success
+    SUCCESS: 'success',
+
     // something went wrong
     SOMETHING_WENT_WRONG: 'Something went wrong.',
 
@@ -33,6 +36,9 @@ const responseMessages = {
     // song
     SONG_CREATED: 'Song is created successfully.',
     SONG_DELETED: 'Song is deleted successfully.',
+    SONG_UPDATED: 'Song is updated successfully.',
+    SONG_NOT_FOUND: 'Song does not exist.',
+    NOT_OWNER_OF_RESOURCE: 'You are not owner of this resource.',
   },
 };
 const lang = process.env.SYSTEM_LANGUAGE || 'EN';

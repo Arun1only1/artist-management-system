@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { ReadArtistService } from 'src/artist/service/read.artist.service';
 import { SongRepository } from '../repository/song.repository';
-import { CreateSongInput } from './../dto/create.song.input';
+import { CreateSongInput } from '../dto/input/create.song.input';
 
 @Injectable()
 export class CreateSongService {

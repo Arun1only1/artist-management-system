@@ -1,6 +1,6 @@
 'use client';
 
-import { getUserList } from '@/lib/api-routes/user.routes';
+import { getUserList } from '@/lib/api-routes/user/user.routes';
 import { getGenderLabel } from '@/utils/get.gender.label';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import { Pagination, Tooltip, Typography } from '@mui/material';
@@ -15,7 +15,9 @@ import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import DeleteUserDialog from './DeleteUserDialog';
-import Loader from './Loader';
+import Loader from './Loader/Loader';
+import { useRouter } from 'next/navigation';
+import ROUTES from '@/constant/route.constants';
 interface UserType {
   id: string;
   firstName: string;
@@ -31,6 +33,8 @@ interface UserType {
 }
 
 const UserTable = () => {
+  // router
+  const router = useRouter();
   // page
   const [page, setPage] = useState(1);
   const { isPending, data } = useQuery({
@@ -55,7 +59,7 @@ const UserTable = () => {
         >
           User List
         </Typography>
-        <Table sx={{ minWidth: 650 }} aria-label='simple table'>
+        <Table className='w-full'>
           <TableHead>
             <TableRow>
               <TableCell align='center'>S.N.</TableCell>
@@ -97,7 +101,12 @@ const UserTable = () => {
                     <DeleteUserDialog userId={item.id} />
 
                     <Tooltip title='Edit'>
-                      <EditNoteOutlinedIcon className='text-green-500 cursor-pointer' />
+                      <EditNoteOutlinedIcon
+                        className='text-green-500 cursor-pointer'
+                        onClick={() => {
+                          router.push(`${ROUTES.EDIT_USER}/${item.id}`);
+                        }}
+                      />
                     </Tooltip>
                   </div>
                 </TableCell>

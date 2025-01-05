@@ -1,5 +1,6 @@
 import {
   ADDRESS_MAX_LENGTH,
+  ALBUM_NAME_MAX_LENGTH,
   EMAIL_MAX_LENGTH,
   FIRST_NAME_MAX_LENGTH,
   LAST_NAME_MAX_LENGTH,
@@ -7,6 +8,7 @@ import {
   PASSWORD_MIN_LENGTH,
   PHONE_MAX_LENGTH,
   PHONE_MIN_LENGTH,
+  TITLE_MAX_LENGTH,
 } from './general.constant';
 
 const MSG = {
@@ -43,6 +45,16 @@ const MSG = {
 
     ADDRESS_REQUIRED: 'Address is required.',
     ADDRESS_MAX_LENGTH: `Address must be at most ${ADDRESS_MAX_LENGTH} characters.`,
+
+    // song
+    TITLE_REQUIRED: 'Title is required.',
+    ALBUM_NAME_REQUIRED: 'Album name is required.',
+    GENRE_REQUIRED: 'Genre is required.',
+
+    TITLE_MAX_LENGTH: `Title must be at most ${TITLE_MAX_LENGTH} characters.`,
+    ALBUM_NAME_MAX_LENGTH: `Title must be at most ${ALBUM_NAME_MAX_LENGTH} characters.`,
+    PROVIDE_VALID_GENRE:
+      'Provide valid genre which is either rnb or country or classic or rock or jazz.',
   },
 };
 

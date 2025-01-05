@@ -11,7 +11,7 @@ export const PHONE_MIN_LENGTH = 10;
 
 export const ADDRESS_MAX_LENGTH = 255;
 
-// roles
+// gender
 
 export const genderOptions = [
   {
@@ -31,6 +31,7 @@ export const genderOptions = [
   },
 ];
 
+// roles
 export const roleOptions = [
   {
     id: 1,
@@ -48,3 +49,34 @@ export const roleOptions = [
     label: 'Artist',
   },
 ];
+
+export const genreOptions = [
+  {
+    id: 1,
+    value: 'rnb',
+    label: 'RNB',
+  },
+  {
+    id: 2,
+    value: 'country',
+    label: 'Country',
+  },
+  {
+    id: 3,
+    value: 'classic',
+    label: 'Classic',
+  },
+  {
+    id: 4,
+    value: 'rock',
+    label: 'Rock',
+  },
+  {
+    id: 5,
+    value: 'jazz',
+    label: 'Jazz',
+  },
+];
+export const TITLE_MAX_LENGTH = 255;
+export const ALBUM_NAME_MAX_LENGTH = 255;
+export const GENRE_MAX_LENGTH = 255;

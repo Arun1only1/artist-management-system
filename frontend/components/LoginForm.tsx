@@ -19,8 +19,8 @@ import {
   Typography,
 } from '@mui/material';
 
-import { loginUser } from '@/lib/api-routes/auth.routes';
-import { loginUserValidationSchema } from '@/validation-schema/login.user.validation.schema';
+import { loginUser } from '@/lib/api-routes/user/auth.routes';
+import { loginUserValidationSchema } from '@/validation-schema/user/login.user.validation.schema';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -67,6 +67,7 @@ const LoginForm = () => {
         'firstName',
         res?.data?.userDetails?.firstName
       );
+      window.localStorage.setItem('role', res?.data?.userDetails?.role);
 
       router.push('/');
     },

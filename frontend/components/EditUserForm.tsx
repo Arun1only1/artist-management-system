@@ -1,22 +1,13 @@
 'use client';
-import { useState } from 'react';
 
-import dayjs from 'dayjs';
-import { Formik } from 'formik';
-
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   Box,
   Button,
   FormControl,
   FormHelperText,
-  IconButton,
-  InputAdornment,
   InputLabel,
   LinearProgress,
   MenuItem,
-  OutlinedInput,
   Select,
   TextField,
   Typography,
@@ -25,164 +16,150 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs from 'dayjs';
+import { Formik } from 'formik';
 
 import { genderOptions, roleOptions } from '@/constant/general.constant';
-import { registerUser } from '@/lib/api-routes/user/auth.routes';
+import ROUTES from '@/constant/route.constants';
+import { getUserDetails, updateUser } from '@/lib/api-routes/user/user.routes';
 import {
   openErrorSnackbar,
   openSuccessSnackbar,
 } from '@/store/slices/snackbarSlice';
 import { getMessageFromError } from '@/utils/get.message.from.error';
-import { registerUserValidationSchema } from '@/validation-schema/user/register.user.validation.schema';
-import { useMutation } from '@tanstack/react-query';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { editUserValidationSchema } from '@/validation-schema/user/edit.user.validation.schema';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useParams, useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 
-export interface UserProps {
+export interface EditUserProps {
   firstName: string;
   lastName: string;
   email: string;
-  password: string;
   phone: string;
   address: string;
   role: string;
   dob: string;
   gender: string;
-  firstReleaseYear?: number;
-  numberOfAlbums?: number;
 }
 
-interface RegisterFormProps {
-  name: string;
-  action: string;
-}
-// register form
-const RegisterForm = ({ name, action }: RegisterFormProps) => {
+// edit user form
+const EditUserForm = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+  //   params
+  const params = useParams();
+  const userId = params.id;
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  //   get user details
+  const { isPending: getUserDetailPending, data } = useQuery({
+    queryKey: ['get-user-details'],
+    queryFn: () => getUserDetails(userId as string),
+  });
 
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
-  };
+  const userDetails = data?.data;
 
-  const handleMouseUpPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
-  };
-
-  //   register user mutation
+  //   update  user mutation
   const { isPending, mutate } = useMutation({
-    mutationKey: ['register-user'],
-    mutationFn: async (values: UserProps) => {
-      return await registerUser(values);
+    mutationKey: ['edit-user'],
+    mutationFn: async (values: EditUserProps) => {
+      return await updateUser(userId as string, values);
     },
     onSuccess: (res) => {
-      router.push(action === 'register' ? '/login' : '/');
+      router.push(ROUTES.HOME);
       dispatch(openSuccessSnackbar({ message: res?.data?.message }));
     },
     onError: (error) => {
       dispatch(openErrorSnackbar({ message: getMessageFromError(error) }));
     },
   });
+
   return (
     <Box>
-      {isPending && <LinearProgress color='success' />}
+      {(isPending || getUserDetailPending) && (
+        <LinearProgress color='success' />
+      )}
       <Formik
+        enableReinitialize
         initialValues={{
-          firstName: '',
-          lastName: '',
-          email: '',
-          password: '',
-          phone: '',
-          address: '',
-          role: '',
-          dob: '',
-          gender: '',
+          firstName: userDetails?.firstName || '',
+          lastName: userDetails?.lastName || '',
+          email: userDetails?.email || '',
+
+          phone: userDetails?.phone || '',
+          address: userDetails?.address || '',
+          role: userDetails?.role || '',
+          dob: userDetails?.dob || null,
+          gender: userDetails?.gender || '',
         }}
-        validationSchema={registerUserValidationSchema}
+        validationSchema={editUserValidationSchema}
         onSubmit={(values) => {
           mutate(values);
         }}
       >
         {({ handleSubmit, getFieldProps, errors, touched, setFieldValue }) => (
           <form onSubmit={handleSubmit} className='form w-[450px] gap-4'>
-            <Typography variant='h4'>{name}</Typography>
+            <Typography variant='h4'>Edit User</Typography>
             <FormControl fullWidth>
               <TextField
                 label='First Name'
                 {...getFieldProps('firstName')}
                 error={!!errors.firstName && !!touched.firstName}
                 helperText={
-                  errors.firstName && touched.firstName && errors.firstName
+                  !!errors?.firstName &&
+                  !!touched?.firstName &&
+                  !!errors?.firstName
                 }
               />
             </FormControl>
+
             <FormControl fullWidth>
               <TextField
                 label='Last Name'
                 {...getFieldProps('lastName')}
                 error={!!errors.lastName && !!touched.lastName}
                 helperText={
-                  errors.lastName && touched.lastName && errors.lastName
+                  !!errors?.lastName &&
+                  !!touched?.lastName &&
+                  !!errors?.lastName
                 }
               />
             </FormControl>
+
             <FormControl fullWidth>
               <TextField
                 label='Email'
                 {...getFieldProps('email')}
                 error={!!errors.email && !!touched.email}
-                helperText={errors.email && touched.email && errors.email}
-              />
-            </FormControl>
-            <FormControl variant='outlined' fullWidth>
-              <InputLabel>Password</InputLabel>
-              <OutlinedInput
-                {...getFieldProps('password')}
-                type={showPassword ? 'text' : 'password'}
-                error={!!errors.email && !!touched.email}
-                endAdornment={
-                  <InputAdornment position='end'>
-                    <IconButton
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      onMouseUp={handleMouseUpPassword}
-                      edge='end'
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
+                helperText={
+                  !!errors?.email && !!touched?.email && !!errors?.email
                 }
-                label='Password'
               />
-              {touched.password && errors.password && (
-                <FormHelperText error>{errors.password}</FormHelperText>
-              )}
             </FormControl>
+
             <FormControl fullWidth>
               <TextField
                 label='Phone Number'
                 {...getFieldProps('phone')}
                 error={!!errors.phone && !!touched.phone}
-                helperText={errors.phone && touched.phone && errors.phone}
+                helperText={
+                  !!errors?.phone && !!touched?.phone && !!errors?.phone
+                }
               />
             </FormControl>
+
             <FormControl fullWidth>
               <TextField
                 label='Address'
                 {...getFieldProps('address')}
                 error={!!errors.address && !!touched.address}
-                helperText={errors.address && touched.address && errors.address}
+                helperText={
+                  !!errors?.address && !!touched?.address && !!errors?.address
+                }
               />
             </FormControl>
+
             <FormControl fullWidth>
               <InputLabel>Role</InputLabel>
               <Select label='Role' {...getFieldProps('role')}>
@@ -193,7 +170,9 @@ const RegisterForm = ({ name, action }: RegisterFormProps) => {
                 ))}
               </Select>
               {touched.role && errors.role && (
-                <FormHelperText error>{errors.role}</FormHelperText>
+                <FormHelperText error>
+                  {errors?.role?.toString()}
+                </FormHelperText>
               )}
             </FormControl>
 
@@ -207,13 +186,19 @@ const RegisterForm = ({ name, action }: RegisterFormProps) => {
                 ))}
               </Select>
               {touched.gender && errors.gender && (
-                <FormHelperText error>{errors.gender}</FormHelperText>
+                <FormHelperText error>
+                  {typeof errors.gender === 'string' && errors.gender}
+                </FormHelperText>
               )}
             </FormControl>
+
             <FormControl fullWidth>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
                   <DatePicker
+                    defaultValue={
+                      userDetails?.dob ? dayjs(userDetails?.dob) : null
+                    }
                     onChange={(date) => {
                       setFieldValue('dob', dayjs(date).format('YYYY-MM-DD'));
                     }}
@@ -225,20 +210,10 @@ const RegisterForm = ({ name, action }: RegisterFormProps) => {
                 </DemoContainer>
               </LocalizationProvider>
             </FormControl>
-            <FormControl fullWidth className='flex justify-center items-center'>
-              <Button
-                fullWidth
-                type='submit'
-                variant='contained'
-                color='success'
-              >
-                submit
-              </Button>
 
-              <Link href='/login' className='text-blue-500 underline mt-3'>
-                Already registered? Login
-              </Link>
-            </FormControl>
+            <Button fullWidth type='submit' variant='contained' color='success'>
+              submit
+            </Button>
           </form>
         )}
       </Formik>
@@ -246,4 +221,4 @@ const RegisterForm = ({ name, action }: RegisterFormProps) => {
   );
 };
 
-export default RegisterForm;
+export default EditUserForm;

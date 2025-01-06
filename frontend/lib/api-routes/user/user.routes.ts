@@ -1,7 +1,7 @@
 import { EditUserProps } from '@/components/EditUserForm';
 import $axios from '../../axios/axios.instance';
 
-interface PaginationProps {
+export interface PaginationProps {
   page: number;
   limit: number;
 }

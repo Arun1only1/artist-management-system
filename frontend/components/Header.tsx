@@ -17,7 +17,7 @@ export default function Navbar() {
   // Navigation items array
   const navItems = [
     { name: 'User', href: '/' },
-    { name: 'Artist', href: '/about' },
+    { name: 'Artist', href: '/artist' },
     { name: 'Song', href: '/song' },
     { name: 'Contact', href: '/contact' },
   ];

@@ -31,15 +31,13 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={` ${geistSans.variable} ${geistMono.variable} antialiased `}
       >
         <ReduxToolkitProvider>
           <ReactQueryClientProvider>
             <CustomSnackbar />
-            <div className='flex flex-col gap-4'>
-              <Navbar />
-              {children}
-            </div>
+            <Navbar />
+            {children}
           </ReactQueryClientProvider>
         </ReduxToolkitProvider>
       </body>

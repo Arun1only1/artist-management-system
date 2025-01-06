@@ -5,18 +5,17 @@ import {
   PHONE_MAX_LENGTH,
   PHONE_MIN_LENGTH,
   ADDRESS_MAX_LENGTH,
-} from './../constant/general.constant';
+} from '../../constant/general.constant';
 import * as Yup from 'yup';
 
-import MSG from '../constant/validation.messages';
+import MSG from '../../constant/validation.messages';
 
-import { Gender } from '../constant/enums/gender.enum';
-import { Role } from '../constant/enums/role.enum';
+import { Gender } from '../../constant/enums/gender.enum';
+import { Role } from '../../constant/enums/role.enum';
 import {
   PASSWORD_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
-} from '../constant/general.constant';
-
+} from '../../constant/general.constant';
 export const registerUserValidationSchema = Yup.object({
   firstName: Yup.string()
     .required(MSG.FIRST_NAME_REQUIRED)

@@ -13,7 +13,7 @@ export default {
         foreground: 'var(--foreground)',
       },
       animation: {
-        'spin-slow': 'spin 1s linear infinite',
+        'spin-slow': 'spin 1.5s linear infinite',
       },
     },
   },

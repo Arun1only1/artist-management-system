@@ -1,23 +1,23 @@
-import * as React from 'react';
+import { deleteSong } from '@/lib/api-routes/song/song.routes';
+import { openErrorSnackbar } from '@/store/slices/snackbarSlice';
+import { getMessageFromError } from '@/utils/get.message.from.error';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import { Tooltip } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteUser } from '@/lib/api-routes/user/user.routes';
-import { Tooltip } from '@mui/material';
-import Loader from './Loader/Loader';
+import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import { getMessageFromError } from '@/utils/get.message.from.error';
-import { openErrorSnackbar } from '@/store/slices/snackbarSlice';
+import Loader from './Loader/Loader';
 
 interface Props {
-  userId: string;
+  artistId: string;
 }
-const DeleteUserDialog = ({ userId }: Props) => {
+const DeleteArtistDialog = ({ artistId }: Props) => {
   const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch();
 
@@ -33,10 +33,10 @@ const DeleteUserDialog = ({ userId }: Props) => {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    mutationKey: ['delete-user'],
-    mutationFn: () => deleteUser(userId),
+    mutationKey: ['delete-song'],
+    mutationFn: () => deleteSong(songId),
     onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: ['get-user-list'] });
+      queryClient.refetchQueries({ queryKey: ['get-song-list'] });
     },
     onError: (error) => {
       dispatch(openErrorSnackbar({ message: getMessageFromError(error) }));
@@ -59,10 +59,10 @@ const DeleteUserDialog = ({ userId }: Props) => {
       </Tooltip>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Are you sure you want to delete this user?</DialogTitle>
+        <DialogTitle>Are you sure you want to delete this song?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Deleting a user is a permanent action and cannot be undone. Please
+            Deleting a song is a permanent action and cannot be undone. Please
             proceed with caution, as this process is irreversible.
           </DialogContentText>
         </DialogContent>
@@ -91,4 +91,4 @@ const DeleteUserDialog = ({ userId }: Props) => {
   );
 };
 
-export default DeleteUserDialog;
+export default DeleteArtistDialog;

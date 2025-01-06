@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 
-import MSG from '../constant/validation.messages';
+import MSG from '../../constant/validation.messages';
 
 export const loginUserValidationSchema = Yup.object({
   email: Yup.string()

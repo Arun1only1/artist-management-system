@@ -5,13 +5,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+import { Artist } from 'src/artist/entities/artist.entity';
+import { USER_PASSWORD_MAX_LENGTH_IN_DB } from 'src/constants/general.constants';
 import { Gender } from '../enum/gender.enum';
 import { UserRole } from '../enum/user.role.enum';
-import { USER_PASSWORD_MAX_LENGTH_IN_DB } from 'src/constants/general.constants';
 
 @Entity('user')
 export class User {
@@ -53,6 +55,9 @@ export class User {
 
   @Column()
   address: string;
+
+  @OneToOne(() => Artist, (artist) => artist.user, { cascade: true })
+  artist: Artist;
 
   @CreateDateColumn({
     type: 'timestamp',

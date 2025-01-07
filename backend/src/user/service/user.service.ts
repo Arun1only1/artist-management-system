@@ -5,11 +5,11 @@ import {
 } from '@nestjs/common';
 import { Not } from 'typeorm';
 
-import { RegisterUserInput } from 'src/auth/dto/input/register.user.input';
-
+import Lang from 'src/constants/language';
+import { UpdateUserInput } from '../dto/input/update.user.input';
 import { UserRepository } from '../repository/user.repository';
 import { PaginationInput } from './../dto/input/pagination.input';
-import Lang from 'src/constants/language';
+import { RegisterUserInput } from 'src/auth/dto/input/register.user.input';
 
 @Injectable()
 export class UserService {
@@ -32,6 +32,10 @@ export class UserService {
     return await this.userRepository.deleteById(userId);
   }
 
+  async deleteUserByCondition(condition) {
+    return this.userRepository.deleteByCondition(condition);
+  }
+
   async findUserById(userId: string) {
     const user = await this.userRepository.findDataById(userId);
 
@@ -42,9 +46,17 @@ export class UserService {
     return user;
   }
 
-  async updateUserById(userId: string, updateUserInput: RegisterUserInput) {
+  async updateUserById(userId: string, updateUserInput: UpdateUserInput) {
     await this.findUserById(userId);
 
     return await this.userRepository.updateDataById(userId, updateUserInput);
+  }
+
+  async addUser(registerUserInput: RegisterUserInput) {
+    return await this.userRepository.insertData(registerUserInput);
+  }
+
+  async findUserByCondition(condition: any) {
+    return await this.userRepository.findDataByCondition(condition);
   }
 }

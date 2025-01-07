@@ -1,8 +1,8 @@
+import { Transform } from 'class-transformer';
 import {
-  IsDateString,
-  IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   Max,
   MaxLength,
@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 
 import MSG from 'src/constants/validation.message';
-import { Gender } from 'src/user/enum/gender.enum';
+import { User } from 'src/user/entities/user.entity';
 
 export class CreateArtistInput {
   @MaxLength(100, { message: MSG.PROPERTY_MAX_LENGTH })
@@ -18,27 +18,17 @@ export class CreateArtistInput {
   @IsString()
   name: string;
 
-  @IsDateString()
-  @IsNotEmpty({ message: MSG.PROPERTY_REQUIRED })
-  dob: Date;
-
-  @IsEnum(Gender, { message: MSG.PROVIDE_VALID_GENDER_VALUE })
-  @IsNotEmpty({ message: MSG.PROPERTY_REQUIRED })
-  gender: string;
-
-  @MaxLength(100, { message: MSG.PROPERTY_MAX_LENGTH })
-  @IsString()
-  @IsNotEmpty({ message: MSG.PROPERTY_REQUIRED })
-  address: string;
-
   @Min(1900, { message: MSG.PROPERTY_MIN_VALUE })
   @Max(new Date().getFullYear(), { message: MSG.PROPERTY_MAX_VALUE })
   @IsNumber()
   @IsNotEmpty({ message: MSG.PROPERTY_REQUIRED })
-  first_release_year: number;
+  firstReleaseYear: number;
 
   @Min(0, { message: MSG.PROPERTY_MIN_VALUE })
   @IsNumber()
   @IsNotEmpty({ message: MSG.PROPERTY_REQUIRED })
-  no_of_albums_released: number;
+  numberOfAlbums: number;
+
+  @IsOptional()
+  user?: User;
 }

@@ -14,9 +14,9 @@ import Lang from 'src/constants/language';
 import { Permissions } from 'src/decorators/permission.decorator';
 import { AuthorizationGuard } from 'src/guards/authorization.guard';
 
-import { RegisterUserInput } from 'src/auth/dto/input/register.user.input';
 import { UserId } from 'src/decorators/user.id.decorator';
 import { PaginationInput } from './dto/input/pagination.input';
+import { UpdateUserInput } from './dto/input/update.user.input';
 import { Action } from './enum/action.enum';
 import { Resource } from './enum/resource.enum';
 import { UserService } from './service/user.service';
@@ -54,7 +54,7 @@ export class UserController {
   @Put('/edit/:id')
   async updateUser(
     @Param() param: IdFromParamsInput,
-    @Body() updateUserInput: RegisterUserInput,
+    @Body() updateUserInput: UpdateUserInput,
   ) {
     const { id: userId } = param;
 

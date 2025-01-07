@@ -29,7 +29,9 @@ export class Song {
   @Column({ type: 'enum', enum: Genre })
   genre: Genre;
 
-  @ManyToOne(() => Artist, (artist) => artist.songs, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Artist, (artist) => artist.songs, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'artist_id' })
   artist: Artist;
 

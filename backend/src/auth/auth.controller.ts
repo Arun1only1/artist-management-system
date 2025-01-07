@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { MessageResponse } from './dto/response/message.response';
 import { LoginUserInput } from './dto/input/login.user.input';
 import { Public } from '../decorators/public.decorator';
+import Lang from 'src/constants/language';
 
 @Controller('auth')
 export class AuthController {
@@ -22,6 +23,6 @@ export class AuthController {
   ): Promise<MessageResponse> {
     await this.authService.registerUser(registerUserInput);
 
-    return { message: 'User is registered successfully.' };
+    return { message: Lang.USER_REGISTERED };
   }
 }

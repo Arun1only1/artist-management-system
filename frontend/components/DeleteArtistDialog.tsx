@@ -1,8 +1,8 @@
-import { deleteSong } from '@/lib/api-routes/song/song.routes';
+import { deleteArtist } from '@/lib/api-routes/artist/artist.routes';
 import { openErrorSnackbar } from '@/store/slices/snackbarSlice';
 import { getMessageFromError } from '@/utils/get.message.from.error';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { Tooltip } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -33,10 +33,12 @@ const DeleteArtistDialog = ({ artistId }: Props) => {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    mutationKey: ['delete-song'],
-    mutationFn: () => deleteSong(songId),
+    mutationKey: ['delete-artist'],
+    mutationFn: async () => {
+      return await deleteArtist(artistId);
+    },
     onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: ['get-song-list'] });
+      queryClient.refetchQueries({ queryKey: ['get-artist-list'] });
     },
     onError: (error) => {
       dispatch(openErrorSnackbar({ message: getMessageFromError(error) }));
@@ -50,20 +52,17 @@ const DeleteArtistDialog = ({ artistId }: Props) => {
   return (
     <React.Fragment>
       <Tooltip title='Delete'>
-        <Button
-          disableRipple
-          color='error'
-          onClick={handleClickOpen}
-          startIcon={<DeleteOutlinedIcon />}
-        ></Button>
+        <IconButton onClick={handleClickOpen} color='error'>
+          <DeleteOutlinedIcon />
+        </IconButton>
       </Tooltip>
 
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Are you sure you want to delete this song?</DialogTitle>
+        <DialogTitle>Are you sure you want to delete this artist?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Deleting a song is a permanent action and cannot be undone. Please
-            proceed with caution, as this process is irreversible.
+            Deleting an artist is a permanent action and cannot be undone.
+            Please proceed with caution, as this process is irreversible.
           </DialogContentText>
         </DialogContent>
         <DialogActions className='gap-8'>

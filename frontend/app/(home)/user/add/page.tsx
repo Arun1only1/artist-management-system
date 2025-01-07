@@ -3,7 +3,7 @@ import React from 'react';
 
 const AddUser = () => {
   return (
-    <div className='div-center '>
+    <div className=''>
       <RegisterForm name='Add User' action='addUser' />
     </div>
   );

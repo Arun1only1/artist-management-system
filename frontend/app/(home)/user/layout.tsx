@@ -12,8 +12,6 @@ export default function UserLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className='flex w-screen h-full justify-center items-center '>
-      {children}
-    </div>
+    <div className='flex  justify-center items-center  h-5/6'>{children}</div>
   );
 }

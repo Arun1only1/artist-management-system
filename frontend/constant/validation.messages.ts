@@ -3,7 +3,9 @@ import {
   ALBUM_NAME_MAX_LENGTH,
   EMAIL_MAX_LENGTH,
   FIRST_NAME_MAX_LENGTH,
+  FIRST_RELEASE_YEAR_MIN_VALUE,
   LAST_NAME_MAX_LENGTH,
+  MIN_NUMBER_OF_ALBUMS,
   PASSWORD_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
   PHONE_MAX_LENGTH,
@@ -38,6 +40,8 @@ const MSG = {
 
     DOB_REQUIRED: 'Date of birth is required.',
     DOB_CANNOT_BE_FUTURE_DATE: 'Date of birth cannot be future date.',
+    DOB_CANNOT_BE_GREATER_THAN_FIRST_RELEASE_YEAR:
+      'Date of birth should be smaller date than first release year.',
 
     GENDER_REQUIRED: 'Gender is required.',
 
@@ -55,6 +59,14 @@ const MSG = {
     ALBUM_NAME_MAX_LENGTH: `Title must be at most ${ALBUM_NAME_MAX_LENGTH} characters.`,
     PROVIDE_VALID_GENRE:
       'Provide valid genre which is either rnb or country or classic or rock or jazz.',
+
+    FIRST_RELEASE_YEAR_REQUIRED: 'First release year is required.',
+    FIRST_RELEASE_YEAR_MIN_VALUE: `First release year cannot be less than ${FIRST_RELEASE_YEAR_MIN_VALUE}.`,
+    FIRST_RELEASE_YEAR_CANNOT_BE_FUTURE_DATE:
+      'First release year cannot be future date.',
+
+    NUMBER_OF_ALBUMS_REQUIRED: 'Number of albums is required.',
+    NUMBER_OF_ALBUMS_MIN_VALUE: `Number of albums cannot be less than ${MIN_NUMBER_OF_ALBUMS}.`,
   },
 };
 

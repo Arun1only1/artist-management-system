@@ -6,7 +6,6 @@ import {
   FormControl,
   FormHelperText,
   InputLabel,
-  LinearProgress,
   MenuItem,
   Select,
   TextField,
@@ -22,56 +21,79 @@ import { Formik } from 'formik';
 import {
   DEFAULT_DATE_FORMAT,
   genderOptions,
-  roleOptions,
 } from '@/constant/general.constant';
 import ROUTES from '@/constant/route.constants';
-import { getUserDetails, updateUser } from '@/lib/api-routes/user/user.routes';
+import {
+  getArtistDetails,
+  updateArtist,
+} from '@/lib/api-routes/artist/artist.routes';
 import {
   openErrorSnackbar,
   openSuccessSnackbar,
 } from '@/store/slices/snackbarSlice';
 import { getMessageFromError } from '@/utils/get.message.from.error';
-import { editUserValidationSchema } from '@/validation-schema/user/edit.user.validation.schema';
+import { editArtistValidationSchema } from '@/validation-schema/artist/edit.artist.validation.schema';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
+import Loader from './Loader/Loader';
 
-export interface EditUserProps {
+export interface EditArtistProps {
+  id: string;
+  numberOfAlbums: number;
+  firstReleaseYear: number;
+  user: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    address: string;
+    dob: string;
+    gender: string;
+  };
+}
+
+export interface EditArtistFormValuesType {
+  id: number;
+  numberOfAlbums: number;
+  firstReleaseYear: number;
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
   address: string;
-  role: string;
   dob: string;
   gender: string;
 }
 
 // edit user form
-const EditUserForm = () => {
+const EditArtistForm = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
   //   params
   const params = useParams();
-  const userId = params.id;
+  const artistId = params.id;
 
-  //   get user details
-  const { isPending: getUserDetailPending, data } = useQuery({
-    queryKey: ['get-user-details'],
-    queryFn: () => getUserDetails(userId as string),
+  //   get artist details
+  const { isPending, data } = useQuery({
+    queryKey: ['get-artist-details'],
+    queryFn: () => getArtistDetails(artistId as string),
   });
 
-  const userDetails = data?.data;
+  const artistData = data?.data?.artist;
 
-  //   update  user mutation
-  const { isPending, mutate } = useMutation({
-    mutationKey: ['edit-user'],
-    mutationFn: async (values: EditUserProps) => {
-      return await updateUser(userId as string, values);
+  //   update  artist mutation
+  const { isPending: updatePending, mutate } = useMutation({
+    mutationKey: ['edit-artist'],
+    mutationFn: async (values: EditArtistFormValuesType) => {
+      return await updateArtist(artistId as string, {
+        ...values,
+        firstReleaseYear: Number(values.firstReleaseYear),
+      });
     },
     onSuccess: (res) => {
-      router.push(ROUTES.HOME);
+      router.push(ROUTES.ARTIST);
       dispatch(openSuccessSnackbar({ message: res?.data?.message }));
     },
     onError: (error) => {
@@ -79,27 +101,30 @@ const EditUserForm = () => {
     },
   });
 
+  if (isPending || updatePending) {
+    return <Loader />;
+  }
+
   return (
     <Box>
-      {(isPending || getUserDetailPending) && (
-        <LinearProgress color='success' />
-      )}
       <Formik
         enableReinitialize
         initialValues={
           {
-            firstName: userDetails?.firstName || '',
-            lastName: userDetails?.lastName || '',
-            email: userDetails?.email || '',
+            firstName: artistData?.user?.firstName || '',
+            lastName: artistData?.user?.lastName || '',
+            email: artistData?.user?.email || '',
 
-            phone: userDetails?.phone || '',
-            address: userDetails?.address || '',
-            role: userDetails?.role || '',
-            dob: userDetails?.dob || null,
-            gender: userDetails?.gender || '',
-          } as EditUserProps
+            phone: artistData?.user?.phone || '',
+            address: artistData?.user?.address || '',
+
+            dob: artistData?.user?.dob || null,
+            gender: artistData?.user?.gender || '',
+            firstReleaseYear: artistData?.firstReleaseYear,
+            numberOfAlbums: artistData?.numberOfAlbums,
+          } as EditArtistFormValuesType
         }
-        validationSchema={editUserValidationSchema}
+        validationSchema={editArtistValidationSchema}
         onSubmit={(values) => {
           mutate(values);
         }}
@@ -113,13 +138,14 @@ const EditUserForm = () => {
           values,
         }) => (
           <form onSubmit={handleSubmit} className='form w-[450px] gap-4'>
-            <Typography variant='h4'>Edit User</Typography>
+            <Typography variant='h4'>Edit Artist</Typography>
             <FormControl fullWidth>
               <TextField
                 label='First Name'
                 {...getFieldProps('firstName')}
                 error={!!errors.firstName && !!touched.firstName}
               />
+
               {touched.firstName && errors.firstName ? (
                 <FormHelperText error>{errors.firstName}</FormHelperText>
               ) : null}
@@ -170,20 +196,6 @@ const EditUserForm = () => {
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel>Role</InputLabel>
-              <Select label='Role' {...getFieldProps('role')}>
-                {roleOptions.map((item) => (
-                  <MenuItem key={item.id} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
-              {touched.role && errors.role && (
-                <FormHelperText error>{errors?.role}</FormHelperText>
-              )}
-            </FormControl>
-
-            <FormControl fullWidth>
               <InputLabel>Gender</InputLabel>
               <Select label='Gender' {...getFieldProps('gender')}>
                 {genderOptions.map((item) => (
@@ -220,6 +232,46 @@ const EditUserForm = () => {
               ) : null}
             </FormControl>
 
+            <FormControl fullWidth>
+              <TextField
+                type='number'
+                label='Number Of Albums'
+                {...getFieldProps('numberOfAlbums')}
+                error={!!errors.numberOfAlbums && !!touched.numberOfAlbums}
+              />
+              {touched.numberOfAlbums && errors.numberOfAlbums ? (
+                <FormHelperText error>{errors.numberOfAlbums}</FormHelperText>
+              ) : null}
+            </FormControl>
+            <FormControl fullWidth>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DatePicker', 'DatePicker']}>
+                  <DatePicker
+                    value={
+                      values?.firstReleaseYear
+                        ? dayjs(`${values?.firstReleaseYear}-01-01`)
+                        : null
+                    }
+                    onChange={(date) => {
+                      setFieldValue(
+                        'firstReleaseYear',
+                        dayjs(date).format('YYYY')
+                      );
+                    }}
+                    maxDate={dayjs()}
+                    yearsOrder='desc'
+                    label={'First release year'}
+                    openTo='year'
+                    views={['year']}
+                    className='w-full'
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+              {touched.firstReleaseYear && errors.firstReleaseYear && (
+                <FormHelperText error>{errors.firstReleaseYear}</FormHelperText>
+              )}
+            </FormControl>
+
             <Button fullWidth type='submit' variant='contained' color='success'>
               submit
             </Button>
@@ -230,4 +282,4 @@ const EditUserForm = () => {
   );
 };
 
-export default EditUserForm;
+export default EditArtistForm;

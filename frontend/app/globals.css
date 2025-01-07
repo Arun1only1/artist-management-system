@@ -29,9 +29,9 @@ body {
 
 @layer utilities {
   .form {
-    @apply flex flex-col justify-center items-center  shadow-2xl shadow-slate-500/50
+    @apply flex flex-col justify-center items-center shadow-2xl shadow-slate-500/50;
 
-    px-8 py-4  rounded-md;
+    @apply px-8 py-4 rounded-md;
   }
 
   .card-center {

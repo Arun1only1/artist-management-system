@@ -11,6 +11,8 @@ export const PHONE_MIN_LENGTH = 10;
 
 export const ADDRESS_MAX_LENGTH = 255;
 
+export const DEFAULT_LIMIT = 10;
+
 // gender
 
 export const genderOptions = [
@@ -80,3 +82,8 @@ export const genreOptions = [
 export const TITLE_MAX_LENGTH = 255;
 export const ALBUM_NAME_MAX_LENGTH = 255;
 export const GENRE_MAX_LENGTH = 255;
+
+export const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD';
+
+export const FIRST_RELEASE_YEAR_MIN_VALUE = 1900;
+export const MIN_NUMBER_OF_ALBUMS = 0;

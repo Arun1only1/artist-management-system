@@ -19,7 +19,6 @@ export default function Navbar() {
     { name: 'User', href: '/' },
     { name: 'Artist', href: '/artist' },
     { name: 'Song', href: '/song' },
-    { name: 'Contact', href: '/contact' },
   ];
 
   return (

@@ -1,13 +1,17 @@
 'use client';
 
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import {
   Box,
   Button,
   FormControl,
   FormHelperText,
+  IconButton,
+  InputAdornment,
   InputLabel,
-  LinearProgress,
   MenuItem,
+  OutlinedInput,
   Select,
   TextField,
   Typography,
@@ -19,59 +23,73 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { Formik } from 'formik';
 
+import { Role } from '@/constant/enums/role.enum';
 import {
   DEFAULT_DATE_FORMAT,
   genderOptions,
-  roleOptions,
 } from '@/constant/general.constant';
 import ROUTES from '@/constant/route.constants';
-import { getUserDetails, updateUser } from '@/lib/api-routes/user/user.routes';
+import { addArtist } from '@/lib/api-routes/artist/artist.routes';
 import {
   openErrorSnackbar,
   openSuccessSnackbar,
 } from '@/store/slices/snackbarSlice';
 import { getMessageFromError } from '@/utils/get.message.from.error';
-import { editUserValidationSchema } from '@/validation-schema/user/edit.user.validation.schema';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { useParams, useRouter } from 'next/navigation';
+import { addArtistValidationSchema } from '@/validation-schema/artist/add.artist.validation.schema';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import Loader from './Loader/Loader';
 
-export interface EditUserProps {
+export interface AddArtistFormValuesType {
+  numberOfAlbums: number;
+  firstReleaseYear: number;
   firstName: string;
   lastName: string;
   email: string;
+  password: string;
   phone: string;
   address: string;
-  role: string;
   dob: string;
   gender: string;
+  role?: string;
 }
 
 // edit user form
-const EditUserForm = () => {
+const AddArtistForm = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  //   params
-  const params = useParams();
-  const userId = params.id;
+  //   password
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  //   get user details
-  const { isPending: getUserDetailPending, data } = useQuery({
-    queryKey: ['get-user-details'],
-    queryFn: () => getUserDetails(userId as string),
-  });
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const userDetails = data?.data;
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
 
-  //   update  user mutation
+  const handleMouseUpPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+
+  //   add  artist mutation
   const { isPending, mutate } = useMutation({
-    mutationKey: ['edit-user'],
-    mutationFn: async (values: EditUserProps) => {
-      return await updateUser(userId as string, values);
+    mutationKey: ['add-artist'],
+    mutationFn: async (values: AddArtistFormValuesType) => {
+      return await addArtist({
+        ...values,
+        firstReleaseYear: Number(values.firstReleaseYear),
+        role: Role.ARTIST,
+      });
     },
     onSuccess: (res) => {
-      router.push(ROUTES.HOME);
+      router.push(ROUTES.ARTIST);
       dispatch(openSuccessSnackbar({ message: res?.data?.message }));
     },
     onError: (error) => {
@@ -79,27 +97,28 @@ const EditUserForm = () => {
     },
   });
 
+  if (isPending) {
+    return <Loader />;
+  }
+
   return (
     <Box>
-      {(isPending || getUserDetailPending) && (
-        <LinearProgress color='success' />
-      )}
       <Formik
-        enableReinitialize
         initialValues={
           {
-            firstName: userDetails?.firstName || '',
-            lastName: userDetails?.lastName || '',
-            email: userDetails?.email || '',
-
-            phone: userDetails?.phone || '',
-            address: userDetails?.address || '',
-            role: userDetails?.role || '',
-            dob: userDetails?.dob || null,
-            gender: userDetails?.gender || '',
-          } as EditUserProps
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+            phone: '',
+            address: '',
+            dob: '',
+            gender: '',
+            firstReleaseYear: 1900,
+            numberOfAlbums: 0,
+          } as AddArtistFormValuesType
         }
-        validationSchema={editUserValidationSchema}
+        validationSchema={addArtistValidationSchema}
         onSubmit={(values) => {
           mutate(values);
         }}
@@ -113,13 +132,14 @@ const EditUserForm = () => {
           values,
         }) => (
           <form onSubmit={handleSubmit} className='form w-[450px] gap-4'>
-            <Typography variant='h4'>Edit User</Typography>
+            <Typography variant='h4'>Add Artist</Typography>
             <FormControl fullWidth>
               <TextField
                 label='First Name'
                 {...getFieldProps('firstName')}
                 error={!!errors.firstName && !!touched.firstName}
               />
+
               {touched.firstName && errors.firstName ? (
                 <FormHelperText error>{errors.firstName}</FormHelperText>
               ) : null}
@@ -146,6 +166,30 @@ const EditUserForm = () => {
                 <FormHelperText error>{errors.email}</FormHelperText>
               ) : null}
             </FormControl>
+            <FormControl variant='outlined' fullWidth>
+              <InputLabel>Password</InputLabel>
+              <OutlinedInput
+                {...getFieldProps('password')}
+                type={showPassword ? 'text' : 'password'}
+                error={!!errors.email && !!touched.email}
+                endAdornment={
+                  <InputAdornment position='end'>
+                    <IconButton
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      onMouseUp={handleMouseUpPassword}
+                      edge='end'
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label='Password'
+              />
+              {touched.password && errors.password && (
+                <FormHelperText error>{errors.password}</FormHelperText>
+              )}
+            </FormControl>
 
             <FormControl fullWidth>
               <TextField
@@ -167,20 +211,6 @@ const EditUserForm = () => {
               {touched.address && errors.address ? (
                 <FormHelperText error>{errors.address}</FormHelperText>
               ) : null}
-            </FormControl>
-
-            <FormControl fullWidth>
-              <InputLabel>Role</InputLabel>
-              <Select label='Role' {...getFieldProps('role')}>
-                {roleOptions.map((item) => (
-                  <MenuItem key={item.id} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
-              {touched.role && errors.role && (
-                <FormHelperText error>{errors?.role}</FormHelperText>
-              )}
             </FormControl>
 
             <FormControl fullWidth>
@@ -220,6 +250,41 @@ const EditUserForm = () => {
               ) : null}
             </FormControl>
 
+            <FormControl fullWidth>
+              <TextField
+                type='number'
+                label='Number Of Albums'
+                {...getFieldProps('numberOfAlbums')}
+                error={!!errors.numberOfAlbums && !!touched.numberOfAlbums}
+              />
+              {touched.numberOfAlbums && errors.numberOfAlbums ? (
+                <FormHelperText error>{errors.numberOfAlbums}</FormHelperText>
+              ) : null}
+            </FormControl>
+
+            <FormControl fullWidth>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DatePicker', 'DatePicker']}>
+                  <DatePicker
+                    onChange={(date) => {
+                      setFieldValue(
+                        'firstReleaseYear',
+                        dayjs(date).format('YYYY')
+                      );
+                    }}
+                    maxDate={dayjs()}
+                    yearsOrder='desc'
+                    label={'First release year'}
+                    openTo='year'
+                    views={['year']}
+                    className='w-full'
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+              {touched.firstReleaseYear && errors.firstReleaseYear && (
+                <FormHelperText error>{errors.firstReleaseYear}</FormHelperText>
+              )}
+            </FormControl>
             <Button fullWidth type='submit' variant='contained' color='success'>
               submit
             </Button>
@@ -230,4 +295,4 @@ const EditUserForm = () => {
   );
 };
 
-export default EditUserForm;
+export default AddArtistForm;

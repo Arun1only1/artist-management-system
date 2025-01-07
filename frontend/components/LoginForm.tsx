@@ -97,8 +97,10 @@ const LoginForm = () => {
                 label='Email'
                 {...getFieldProps('email')}
                 error={!!errors.email && !!touched.email}
-                helperText={errors.email && touched.email && errors.email}
               />
+              {touched.email && errors.email ? (
+                <FormHelperText error>{errors.email}</FormHelperText>
+              ) : null}
             </FormControl>
 
             <FormControl variant='outlined' fullWidth>

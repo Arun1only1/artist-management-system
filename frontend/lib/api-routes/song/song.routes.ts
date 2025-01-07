@@ -1,5 +1,6 @@
 import { AddSongProps } from '@/app/(home)/song/add/page';
 import $axios from '../../axios/axios.instance';
+import { SongDataProps } from '@/components/EditSongForm';
 
 interface GetSongListProps {
   page: number;
@@ -30,12 +31,12 @@ export const deleteSong = async (songId: string) => {
   return await $axios.delete(`/song/delete/${songId}`);
 };
 
-// // get user details
-// export const getUserDetails = async (userId: string) => {
-//   return await $axios.get(`/user/details/${userId}`);
-// };
+// update song
+export const updateSong = async (songId: string, values: SongDataProps) => {
+  return await $axios.put(`/song/edit/${songId}`, values);
+};
 
-// // update user
-// export const updateUser = async (userId: string, values: EditUserProps) => {
-//   return await $axios.put(`/user/edit/${userId}`, values);
-// };
+// get song details
+export const getSongDetails = async (songId: string) => {
+  return await $axios.get(`/song/details/${songId}`);
+};

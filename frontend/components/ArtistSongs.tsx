@@ -1,45 +1,42 @@
 'use client';
-
-import ROUTES from '@/constant/route.constants';
+import { DEFAULT_LIMIT } from '@/constant/general.constant';
 import { getSongList } from '@/lib/api-routes/song/song.routes';
-import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
-import { Pagination, Tooltip, Typography } from '@mui/material';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import DeleteSongDialog from './DeleteSongDialog';
+import { useParams } from 'next/navigation';
+import React, { useState } from 'react';
 import Loader from './Loader/Loader';
+import {
+  Pagination,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material';
+import { SongProps } from './SongTable';
 
-export interface SongProps {
-  id: string;
-  title: string;
-  albumName: string;
-  genre: string;
-}
-
-const SongTable = ({ artistId }: { artistId?: string }) => {
-  // router
-  const router = useRouter();
-  // page
+const ArtistSongs = () => {
   const [page, setPage] = useState(1);
-  const { isPending, data } = useQuery({
-    queryKey: ['get-song-list', page],
-    queryFn: () => {
-      return getSongList({ page, limit: 10, artistId });
+  const params = useParams();
+
+  const artistId = params?.id;
+
+  const { data, isPending } = useQuery({
+    queryKey: ['artist-song-list'],
+    queryFn: async () => {
+      return await getSongList({
+        page: 1,
+        limit: DEFAULT_LIMIT,
+        artistId: artistId as string,
+      });
     },
-    // TODO:error handle
   });
 
-  console.log(data);
   const songList: SongProps[] = data?.data?.songList?.result;
-  const totalPages: number = data?.data?.songList?.totalPages;
+  const totalPage = data?.data?.totalPage;
 
   if (isPending) {
     return <Loader />;
@@ -74,13 +71,10 @@ const SongTable = ({ artistId }: { artistId?: string }) => {
               <TableCell align='center' sx={{ fontWeight: 'bold' }}>
                 Genre
               </TableCell>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
-                Actions
-              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {songList.map((item, index) => (
+            {songList?.map((item, index) => (
               <TableRow
                 key={item.id}
                 sx={{
@@ -98,19 +92,6 @@ const SongTable = ({ artistId }: { artistId?: string }) => {
                 <TableCell align='center' className='capitalize'>
                   {item.genre}
                 </TableCell>
-                <TableCell align='center'>
-                  <div className='flex justify-center items-center'>
-                    <DeleteSongDialog songId={item.id} />
-                    <Tooltip title='Edit'>
-                      <EditNoteOutlinedIcon
-                        className='text-green-500 cursor-pointer'
-                        onClick={() => {
-                          router.push(`${ROUTES.EDIT_SONG}/${item.id}`);
-                        }}
-                      />
-                    </Tooltip>
-                  </div>
-                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -118,7 +99,7 @@ const SongTable = ({ artistId }: { artistId?: string }) => {
       </TableContainer>
       <Pagination
         page={page}
-        count={totalPages}
+        count={totalPage}
         color='secondary'
         className='my-12'
         onChange={(_, pageNumber) => {
@@ -129,4 +110,4 @@ const SongTable = ({ artistId }: { artistId?: string }) => {
   );
 };
 
-export default SongTable;
+export default ArtistSongs;

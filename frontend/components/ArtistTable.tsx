@@ -3,7 +3,7 @@
 import ROUTES from '@/constant/route.constants';
 import { getArtistList } from '@/lib/api-routes/artist/artist.routes';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
-import { Pagination, Tooltip, Typography } from '@mui/material';
+import { IconButton, Pagination, Tooltip, Typography } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -14,14 +14,23 @@ import TableRow from '@mui/material/TableRow';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import DeleteSongDialog from './DeleteSongDialog';
+import DeleteArtistDialog from './DeleteArtistDialog';
 import Loader from './Loader/Loader';
-
+import { formatDate } from '@/utils/format.date';
+import { getGenderLabel } from '@/utils/get.gender.label';
+import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 export interface ArtistProps {
   id: string;
   name: string;
   firstReleaseYear: number;
   numberOfAlbums: number;
+  user: {
+    email: string;
+    phone: string;
+    dob: string;
+    gender: string;
+    address: string;
+  };
 }
 
 const ArtistTable = () => {
@@ -37,7 +46,6 @@ const ArtistTable = () => {
     // TODO:error handle
   });
 
-  console.log(data);
   const artistList: ArtistProps[] = data?.data?.artistList?.result;
   const totalPages: number = data?.data?.songList?.totalPages;
 
@@ -57,7 +65,7 @@ const ArtistTable = () => {
           component='div'
           sx={{ marginBottom: 2, ml: '1rem' }}
         >
-          Song List
+          Artist List
         </Typography>
         <Table className='w-full min-w-[600px]'>
           <TableHead>
@@ -69,7 +77,22 @@ const ArtistTable = () => {
                 Name
               </TableCell>
               <TableCell align='center' sx={{ fontWeight: 'bold' }}>
-                first Release Year
+                Email
+              </TableCell>
+              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+                Gender
+              </TableCell>
+              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+                Address
+              </TableCell>
+              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+                Phone
+              </TableCell>
+              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+                DOB
+              </TableCell>
+              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+                First Release Year
               </TableCell>
               <TableCell align='center' sx={{ fontWeight: 'bold' }}>
                 Number of Albums
@@ -90,25 +113,48 @@ const ArtistTable = () => {
               >
                 <TableCell align='center'>{index + 1}</TableCell>
                 <TableCell align='center' className='capitalize'>
-                  {item.name}
+                  {item?.name}
+                </TableCell>
+                <TableCell align='center'>{item?.user?.email}</TableCell>
+                <TableCell align='center' className='capitalize'>
+                  {getGenderLabel(item?.user?.gender)}
                 </TableCell>
                 <TableCell align='center' className='capitalize'>
-                  {item.firstReleaseYear}
+                  {item?.user?.address}
                 </TableCell>
                 <TableCell align='center' className='capitalize'>
-                  {item.numberOfAlbums}
+                  {item?.user?.phone}
+                </TableCell>
+                <TableCell align='center' className='capitalize'>
+                  {formatDate(item?.user?.dob)}
+                </TableCell>
+                <TableCell align='center' className='capitalize'>
+                  {item?.firstReleaseYear}
+                </TableCell>
+                <TableCell align='center' className='capitalize'>
+                  {item?.numberOfAlbums}
                 </TableCell>
                 <TableCell align='center'>
                   <div className='flex justify-center items-center'>
-                    <DeleteSongDialog songId={item.id} />
+                    <IconButton
+                      color='primary'
+                      onClick={() => {
+                        router.push(`${ROUTES.ARTIST_SONG_LIST}/${item.id}`);
+                      }}
+                    >
+                      <RemoveRedEyeOutlinedIcon />
+                    </IconButton>
                     <Tooltip title='Edit'>
-                      <EditNoteOutlinedIcon
-                        className='text-green-500 cursor-pointer'
+                      <IconButton
+                        color='success'
                         onClick={() => {
-                          router.push(`${ROUTES.EDIT_USER}/${item.id}`);
+                          router.push(`${ROUTES.EDIT_ARTIST}/${item.id}`);
                         }}
-                      />
+                      >
+                        <EditNoteOutlinedIcon />
+                      </IconButton>
                     </Tooltip>
+                    <DeleteArtistDialog artistId={item.id} />
                   </div>
                 </TableCell>
               </TableRow>

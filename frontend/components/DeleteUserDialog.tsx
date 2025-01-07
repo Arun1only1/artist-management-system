@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteUser } from '@/lib/api-routes/user/user.routes';
-import { Tooltip } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import Loader from './Loader/Loader';
 import { useDispatch } from 'react-redux';
 import { getMessageFromError } from '@/utils/get.message.from.error';
@@ -50,12 +50,9 @@ const DeleteUserDialog = ({ userId }: Props) => {
   return (
     <React.Fragment>
       <Tooltip title='Delete'>
-        <Button
-          disableRipple
-          color='error'
-          onClick={handleClickOpen}
-          startIcon={<DeleteOutlinedIcon />}
-        ></Button>
+        <IconButton onClick={handleClickOpen} color='error'>
+          <DeleteOutlinedIcon />
+        </IconButton>
       </Tooltip>
 
       <Dialog open={open} onClose={handleClose}>

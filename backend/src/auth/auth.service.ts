@@ -3,51 +3,55 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import Lang from 'src/constants/language';
 import { TokenService } from 'src/token/token.service';
-import { User } from 'src/user/entities/user.entity';
-import { Repository } from 'typeorm';
+import { UserService } from 'src/user/service/user.service';
 import { LoginUserInput } from './dto/input/login.user.input';
 import { RegisterUserInput } from './dto/input/register.user.input';
+import { UserRole } from 'src/user/enum/user.role.enum';
+import { CreateArtistService } from 'src/artist/service/create.artist.service';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly userService: UserService,
     private readonly tokenService: TokenService,
+    private readonly createArtistService: CreateArtistService,
   ) {}
 
   async registerUser(registerUserInput: RegisterUserInput) {
     // find user with email
-    const user = await this.userRepository.findOne({
-      where: {
-        email: registerUserInput.email,
-      },
+    const userExists = await this.userService.findUserByCondition({
+      email: registerUserInput.email,
     });
 
     // if user, throw error
-    if (user) {
-      throw new ConflictException('User with provided email already exists.');
+    if (userExists) {
+      throw new ConflictException(Lang.EMAIL_ALREADY_EXISTS);
     }
 
-    const data = this.userRepository.create({
-      ...registerUserInput,
-    });
+    // create user
+    const newUser: User = await this.userService.addUser(registerUserInput);
 
-    return await this.userRepository.save(data);
+    if (registerUserInput.role === UserRole.ARTIST) {
+      await this.createArtistService.createArtist({
+        name: `${registerUserInput.firstName} ${registerUserInput.lastName}`,
+        numberOfAlbums: registerUserInput.numberOfAlbums,
+        firstReleaseYear: registerUserInput.firstReleaseYear,
+        user: newUser,
+      });
+    }
   }
 
   async loginUser(loginCredentials: LoginUserInput) {
     const { email, password } = loginCredentials;
 
-    const user = await this.userRepository.findOne({
-      where: {
-        email,
-      },
+    const user = await this.userService.findUserByCondition({
+      email,
     });
 
-    console.log(user);
     if (!user) {
       throw new NotFoundException('Invalid credentials.');
     }

@@ -9,7 +9,6 @@ import {
   MaxDate,
   MaxLength,
   Min,
-  ValidateIf,
 } from 'class-validator';
 import * as dayjs from 'dayjs';
 import {
@@ -19,17 +18,14 @@ import {
   USER_EMAIL_MAX_LENGTH,
   USER_FIRST_NAME_MAX_LENGTH,
   USER_LAST_NAME_MAX_LENGTH,
-  USER_PASSWORD_MAX_LENGTH,
   USER_PHONE_MAX_LENGTH,
 } from 'src/constants/general.constants';
 import MSG from 'src/constants/validation.message';
 
 import { Transform, Type } from 'class-transformer';
-import { Matches } from 'class-validator';
 import { Gender } from 'src/user/enum/gender.enum';
-import { UserRole } from 'src/user/enum/user.role.enum';
 
-export class RegisterUserInput {
+export class UpdateArtistInput {
   @IsNotEmpty({ message: MSG.PROPERTY_REQUIRED })
   @IsString()
   @MaxLength(USER_FIRST_NAME_MAX_LENGTH, { message: MSG.PROPERTY_MAX_LENGTH })
@@ -45,17 +41,6 @@ export class RegisterUserInput {
   @Transform(({ value }) => value.toLowerCase())
   @IsNotEmpty({ message: MSG.PROPERTY_REQUIRED })
   email: string;
-
-  @IsNotEmpty({ message: MSG.PROPERTY_REQUIRED })
-  @Matches(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-    {
-      message: MSG.PROVIDE_VALID_PASSWORD,
-    },
-  )
-  @MaxLength(USER_PASSWORD_MAX_LENGTH, { message: MSG.PROPERTY_MAX_LENGTH })
-  @IsString()
-  password: string;
 
   @MaxLength(USER_PHONE_MAX_LENGTH, { message: MSG.PROPERTY_MAX_LENGTH })
   @IsString()
@@ -77,20 +62,14 @@ export class RegisterUserInput {
   @MaxLength(USER_ADDRESS_MAX_LENGTH, { message: MSG.PROPERTY_MAX_LENGTH })
   address: string;
 
-  @IsNotEmpty({ message: MSG.PROPERTY_REQUIRED })
-  @IsEnum(UserRole, { message: MSG.PROVIDE_VALID_USER_ROLE })
-  role: UserRole;
-
   @IsNumber()
   @Min(ARTIST_MIN_ALBUM_NUMBER, { message: MSG.PROPERTY_MIN_VALUE })
-  @ValidateIf((o) => o.role === UserRole.ARTIST)
   @IsNotEmpty({ message: MSG.PROPERTY_REQUIRED })
-  numberOfAlbums?: number;
+  numberOfAlbums: number;
 
   @Min(ARTIST_MIN_RELEASE_YEAR, { message: MSG.PROPERTY_MIN_VALUE })
   @Max(dayjs().year(), { message: MSG.PROPERTY_MAX_VALUE })
   @IsNumber()
-  @ValidateIf((o) => o.role === UserRole.ARTIST)
   @IsNotEmpty({ message: MSG.PROPERTY_REQUIRED })
-  firstReleaseYear?: number;
+  firstReleaseYear: number;
 }

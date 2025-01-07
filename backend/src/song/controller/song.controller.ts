@@ -18,14 +18,14 @@ import { Resource } from 'src/user/enum/resource.enum';
 import { IdFromParamsInput } from 'src/artist/dto/input/id.params.input';
 import { MessageResponse } from 'src/auth/dto/response/message.response';
 import { UserId } from 'src/decorators/user.id.decorator';
-import { PaginationInput } from 'src/user/dto/input/pagination.input';
 import { CreateSongInput } from '../dto/input/create.song.input';
+import { SongListInput } from '../dto/input/song.list.input';
+import { UpdateSongInput } from '../dto/input/update.song.input';
 import { SongResponse } from '../dto/response/song.response';
 import { CreateSongService } from '../service/create.song.service';
 import { DeleteSongService } from '../service/delete.song.service';
 import { ListSongService } from '../service/list.song.service';
 import { SongDetailService } from '../service/song.detail.service';
-import { UpdateSongInput } from '../dto/input/update.song.input';
 import { UpdateSongService } from '../service/update.song.service';
 
 @UseGuards(AuthorizationGuard)
@@ -41,8 +41,11 @@ export class SongController {
 
   @Permissions([{ resource: Resource.SONG, actions: [Action.READ] }])
   @Post('/list')
-  async getSongList(@Body() paginationInput: PaginationInput) {
-    const songs = await this.listSongService.getSongList(paginationInput);
+  async getSongList(
+    @Body() songListInput: SongListInput,
+    @UserId() userId: string,
+  ) {
+    const songs = await this.listSongService.getSongList(songListInput, userId);
 
     return { message: Lang.SUCCESS, songList: songs };
   }
@@ -82,8 +85,8 @@ export class SongController {
   }
 
   @Permissions([{ resource: Resource.SONG, actions: [Action.UPDATE] }])
-  @Put('/update/:id')
-  async updateArtist(
+  @Put('/edit/:id')
+  async updateSong(
     @Param() param: IdFromParamsInput,
     @Body() updateSongInput: UpdateSongInput,
     @UserId() userId: string,

@@ -14,6 +14,7 @@ const responseMessages = {
     EMAIL_NOT_EXIST: 'Email does not exist.',
 
     // user
+    USER_REGISTERED: 'User is registered successfully.',
     USER_NOT_EXIST: 'User with the provided email does not exist.',
     USER_CREATED: 'User is created successfully.',
     USER_DELETED: 'User is deleted successfully.',
@@ -29,6 +30,7 @@ const responseMessages = {
     ARTIST_DELETED: 'Artist is deleted successfully.',
     ARTIST_UPDATED: 'Artist is updated successfully.',
     ARTIST_NOT_FOUND: 'Artist does not exist.',
+    ARTIST_EXISTS: 'Artist already exists',
 
     // uuid
     INVALID_UUID: 'Invalid UUID parameter.',

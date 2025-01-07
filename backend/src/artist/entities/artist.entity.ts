@@ -2,13 +2,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Gender } from 'src/user/enum/gender.enum';
 import { Song } from 'src/song/entities/song.entity';
+import { User } from 'src/user/entities/user.entity';
 
 @Entity('artist')
 export class Artist {
@@ -18,20 +20,15 @@ export class Artist {
   @Column()
   name: string;
 
-  @Column({ type: 'timestamp' })
-  dob: Date;
+  @Column({
+    name: 'first_release_year',
+  })
+  firstReleaseYear: number;
 
-  @Column({ type: 'enum', enum: Gender })
-  gender: string;
-
-  @Column()
-  address: string;
-
-  @Column()
-  first_release_year: number;
-
-  @Column()
-  no_of_albums_released: number;
+  @Column({
+    name: 'no_of_albums_released',
+  })
+  numberOfAlbums: number;
 
   @CreateDateColumn({
     type: 'timestamp',
@@ -39,7 +36,15 @@ export class Artist {
   })
   created_at: Date;
 
-  @OneToMany(() => Song, (song) => song.artist, { cascade: true })
+  @OneToOne(() => User, (user) => user.artist, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'user_id' })
+  user: User;
+
+  @OneToMany(() => Song, (song) => song.artist, {
+    cascade: true,
+  })
   songs: Song[];
 
   @UpdateDateColumn({

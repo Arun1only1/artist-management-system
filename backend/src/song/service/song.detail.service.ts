@@ -17,11 +17,4 @@ export class SongDetailService {
 
     return song;
   }
-
-  async findSongByConditionAndRelation(condition: any, relations: any[]) {
-    return await this.songRepository.findDataByConditionAndRelations(
-      condition,
-      relations,
-    );
-  }
 }

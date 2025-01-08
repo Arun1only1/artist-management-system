@@ -30,10 +30,6 @@ export class BaseRepository<T> {
     return res[0];
   }
 
-  async updateDataById(id: string, value: any) {
-    await this.collectionName.update(id, value);
-  }
-
   async findDataById(id: string) {
     const query = `SELECT * from ${this.collectionName.metadata.tableName} WHERE id = $1`;
 
@@ -42,25 +38,6 @@ export class BaseRepository<T> {
     const result = await this.entityManager.query(query, parameter);
 
     return result[0];
-  }
-
-  async findDataByCondition(condition: any = {}) {
-    return await this.collectionName.findOne({ where: condition });
-  }
-
-  async findDataByConditionAndRelations(condition: any = {}, relations: any[]) {
-    return await this.collectionName.findOne({ where: condition, relations });
-  }
-
-  async findAllDataWithRelations(condition: any, relationTable: string) {
-    return await this.collectionName.find({
-      where: condition,
-      relations: [relationTable],
-    });
-  }
-
-  async findAllData(condition: any) {
-    return await this.collectionName.find({ where: condition });
   }
 
   async deleteById(id: string) {
@@ -72,9 +49,5 @@ export class BaseRepository<T> {
       console.error('Error deleting data:', error);
       throw new Error('Unable to delete the record');
     }
-  }
-
-  async deleteByCondition(condition: any) {
-    return await this.collectionName.delete(condition);
   }
 }

@@ -8,7 +8,6 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { RegisterUserInput } from 'src/auth/dto/input/register.user.input';
 import { MessageResponse } from 'src/auth/dto/response/message.response';
 import Lang from 'src/constants/language';
 import { Permissions } from 'src/decorators/permission.decorator';
@@ -18,6 +17,7 @@ import { PaginationInput } from 'src/user/dto/input/pagination.input';
 import { Action } from 'src/user/enum/action.enum';
 import { Resource } from 'src/user/enum/resource.enum';
 import { IdFromParamsInput } from '../dto/input/id.params.input';
+import { RegisterArtistInput } from '../dto/input/register.artist.input';
 import { UpdateArtistInput } from '../dto/input/update.artist.input';
 import { CreateArtistService } from '../service/create.artist.service';
 import { DeleteArtistService } from '../service/delete.artist.service';
@@ -37,7 +37,7 @@ export class ArtistController {
   @Permissions([{ resource: Resource.ARTIST, actions: [Action.CREATE] }])
   @Post('add')
   async registerArtist(
-    @Body() registerArtistInput: RegisterUserInput,
+    @Body() registerArtistInput: RegisterArtistInput,
   ): Promise<MessageResponse> {
     await this.createArtistService.registerArtist(registerArtistInput);
 

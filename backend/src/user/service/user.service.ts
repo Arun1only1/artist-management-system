@@ -3,13 +3,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Not } from 'typeorm';
 
+import { RegisterUserInput } from 'src/auth/dto/input/register.user.input';
 import Lang from 'src/constants/language';
 import { UpdateUserInput } from '../dto/input/update.user.input';
 import { UserRepository } from '../repository/user.repository';
 import { PaginationInput } from './../dto/input/pagination.input';
-import { RegisterUserInput } from 'src/auth/dto/input/register.user.input';
 
 @Injectable()
 export class UserService {
@@ -17,7 +16,7 @@ export class UserService {
 
   async getAllUsers(paginationInput: PaginationInput, userId: string) {
     return await this.userRepository.findDataUsingPagination(
-      { id: Not(userId) },
+      userId,
       paginationInput,
     );
   }
@@ -26,8 +25,6 @@ export class UserService {
     if (userId === deleterId) {
       throw new ForbiddenException(Lang.CANNOT_DELETE_YOURSELF);
     }
-
-    await this.findUserById(userId);
 
     return await this.userRepository.deleteById(userId);
   }
@@ -56,7 +53,7 @@ export class UserService {
     return await this.userRepository.insertData(registerUserInput);
   }
 
-  async findUserByCondition(condition: any) {
-    return await this.userRepository.findDataByCondition(condition);
+  async findUserByEmail(email: string) {
+    return await this.userRepository.findUserByEmail(email);
   }
 }

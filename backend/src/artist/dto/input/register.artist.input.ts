@@ -3,12 +3,17 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsString,
+  Max,
   MaxDate,
   MaxLength,
+  Min,
 } from 'class-validator';
 import * as dayjs from 'dayjs';
 import {
+  ARTIST_MIN_ALBUM_NUMBER,
+  ARTIST_MIN_RELEASE_YEAR,
   USER_ADDRESS_MAX_LENGTH,
   USER_EMAIL_MAX_LENGTH,
   USER_FIRST_NAME_MAX_LENGTH,
@@ -21,9 +26,8 @@ import MSG from 'src/constants/validation.message';
 import { Transform, Type } from 'class-transformer';
 import { Matches } from 'class-validator';
 import { Gender } from 'src/user/enum/gender.enum';
-import { UserRole } from 'src/user/enum/user.role.enum';
 
-export class RegisterUserInput {
+export class RegisterArtistInput {
   @IsNotEmpty({ message: MSG.PROPERTY_REQUIRED })
   @IsString()
   @MaxLength(USER_FIRST_NAME_MAX_LENGTH, { message: MSG.PROPERTY_MAX_LENGTH })
@@ -71,9 +75,14 @@ export class RegisterUserInput {
   @MaxLength(USER_ADDRESS_MAX_LENGTH, { message: MSG.PROPERTY_MAX_LENGTH })
   address: string;
 
+  @IsNumber()
+  @Min(ARTIST_MIN_ALBUM_NUMBER, { message: MSG.PROPERTY_MIN_VALUE })
   @IsNotEmpty({ message: MSG.PROPERTY_REQUIRED })
-  @IsEnum([UserRole.SUPER_ADMIN, UserRole.ARTIST_MANAGER], {
-    message: MSG.ROLE_MUST_BE_ADMIN_OR_ARTIST_MANAGER,
-  })
-  role: UserRole;
+  numberOfAlbums: number;
+
+  @Min(ARTIST_MIN_RELEASE_YEAR, { message: MSG.PROPERTY_MIN_VALUE })
+  @Max(dayjs().year(), { message: MSG.PROPERTY_MAX_VALUE })
+  @IsNumber()
+  @IsNotEmpty({ message: MSG.PROPERTY_REQUIRED })
+  firstReleaseYear: number;
 }

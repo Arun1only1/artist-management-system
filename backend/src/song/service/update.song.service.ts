@@ -1,20 +1,17 @@
-import { ReadArtistService } from 'src/artist/service/read.artist.service';
-import { SongDetailService } from './song.detail.service';
 import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-  UnprocessableEntityException,
 } from '@nestjs/common';
-import { SongRepository } from '../repository/song.repository';
-import { UpdateSongInput } from '../dto/input/update.song.input';
+import { ReadArtistService } from 'src/artist/service/read.artist.service';
 import Lang from 'src/constants/language';
+import { UpdateSongInput } from '../dto/input/update.song.input';
+import { SongRepository } from '../repository/song.repository';
 
 @Injectable()
 export class UpdateSongService {
   constructor(
     private readonly songRepository: SongRepository,
-    private readonly songDetailService: SongDetailService,
     private readonly readArtistService: ReadArtistService,
   ) {}
 
@@ -23,32 +20,27 @@ export class UpdateSongService {
     userId: string,
     updateSongInput: UpdateSongInput,
   ) {
-    const song = await this.songDetailService.findSongByConditionAndRelation(
-      { id: songId },
-      ['artist'],
-    );
-
-    if (!song) {
-      throw new NotFoundException(Lang.SONG_NOT_FOUND);
-    }
-
-    const songArtistId = song?.artist?.id;
-
-    if (!songArtistId) {
-      throw new UnprocessableEntityException(Lang.SOMETHING_WENT_WRONG);
-    }
-
-    //  find user using provided artist id
+    //  find artist using userId
     const artist = await this.readArtistService.findArtistByUserId(userId);
 
+    // if not artist throw error
     if (!artist) {
-      throw new UnprocessableEntityException(Lang.SOMETHING_WENT_WRONG);
+      throw new NotFoundException(Lang.ARTIST_NOT_FOUND);
     }
 
-    if (artist.id !== songArtistId) {
+    // find song using song id
+    const song = await this.songRepository.findDataById(songId);
+
+    // song does not exit
+    if (!song) {
       throw new ForbiddenException(Lang.NOT_OWNER_OF_RESOURCE);
     }
 
-    return await this.songRepository.updateDataById(songId, updateSongInput);
+    // check ownership
+    if (song.artist_id !== artist.id) {
+      throw new ForbiddenException(Lang.NOT_OWNER_OF_RESOURCE);
+    }
+
+    return await this.songRepository.updateSong(songId, updateSongInput);
   }
 }

@@ -20,14 +20,10 @@ export class Artist {
   @Column()
   name: string;
 
-  @Column({
-    name: 'first_release_year',
-  })
+  @Column()
   firstReleaseYear: number;
 
-  @Column({
-    name: 'no_of_albums_released',
-  })
+  @Column()
   numberOfAlbums: number;
 
   @CreateDateColumn({
@@ -39,7 +35,7 @@ export class Artist {
   @OneToOne(() => User, (user) => user.artist, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'user_id' })
+  @JoinColumn({ name: 'users_id' })
   user: User;
 
   @OneToMany(() => Song, (song) => song.artist, {

@@ -16,3 +16,5 @@ export const DEFAULT_LIMIT = 10;
 
 export const ARTIST_MIN_ALBUM_NUMBER = 0;
 export const ARTIST_MIN_RELEASE_YEAR = 1900;
+
+export const SALT_ROUNDS = 10;

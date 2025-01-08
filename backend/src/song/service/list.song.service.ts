@@ -27,10 +27,9 @@ export class ListSongService {
       artistIdInSongTable = artistId;
     }
     // find artist from userId
-    const condition = { artist: { id: artistIdInSongTable } };
+    const condition = { artistId: artistIdInSongTable };
 
-    console.log(condition);
-    const songs = await this.songRepository.findDataUsingPagination(condition, {
+    const songs = await this.songRepository.findSongUsingPagination(condition, {
       page,
       limit,
     });

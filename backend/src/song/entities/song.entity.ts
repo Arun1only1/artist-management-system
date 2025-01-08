@@ -23,7 +23,7 @@ export class Song {
   })
   title: string;
 
-  @Column({ name: 'album_name', length: SONG_ALBUM_NAME_MAX_LENGTH })
+  @Column({ length: SONG_ALBUM_NAME_MAX_LENGTH })
   albumName: string;
 
   @Column({ type: 'enum', enum: Genre })

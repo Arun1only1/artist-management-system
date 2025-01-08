@@ -15,10 +15,16 @@ const responseMessages = {
 
     // user
     USER_REGISTERED: 'User is registered successfully.',
-    USER_NOT_EXIST: 'User with the provided email does not exist.',
+    USER_NOT_EXIST: 'User does not exist.',
     USER_CREATED: 'User is created successfully.',
     USER_DELETED: 'User is deleted successfully.',
     USER_UPDATED: 'User is updated successfully.',
+    USER_NOT_AUTHENTICATED: 'User is not authenticated.',
+    USER_ROLE_HAS_NO_PERMISSION: 'User role has no permissions assigned.',
+
+    USER_DOES_NOT_HAVE_PERMISSION: 'User does not have required permissions.',
+
+    NO_PERMISSION_FOR_THIS_ROUTE: 'No permissions defined for this route.',
 
     CANNOT_DELETE_YOURSELF: 'You cannot delete yourself.',
 

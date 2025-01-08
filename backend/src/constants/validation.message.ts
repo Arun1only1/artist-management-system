@@ -49,6 +49,11 @@ const validationMessages = {
     // role
     PROVIDE_VALID_USER_ROLE:
       'Provide valid user role which is either super_admin or artist_manager or artist.',
+
+    ROLE_MUST_BE_ADMIN_OR_ARTIST_MANAGER:
+      'Provide valid user role which is either super_admin or artist_manager.',
+
+    ROLE_MUST_BE_ADMIN: 'User role must be super_admin',
   },
 };
 const lang = process.env.SYSTEM_LANGUAGE || 'EN';

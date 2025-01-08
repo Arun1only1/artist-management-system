@@ -1,7 +1,4 @@
-import * as bcrypt from 'bcrypt';
 import {
-  BeforeInsert,
-  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -15,17 +12,15 @@ import { USER_PASSWORD_MAX_LENGTH_IN_DB } from 'src/constants/general.constants'
 import { Gender } from '../enum/gender.enum';
 import { UserRole } from '../enum/user.role.enum';
 
-@Entity('user')
+@Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({
-    name: 'first_name',
-  })
+  @Column()
   firstName: string;
 
-  @Column({ name: 'last_name' })
+  @Column()
   lastName: string;
 
   @Column({
@@ -71,14 +66,6 @@ export class User {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   updated_at: Date;
-
-  // Hash the password before saving
-  @BeforeInsert()
-  @BeforeUpdate()
-  async hashPassword() {
-    const saltRounds = 10;
-    this.password = await bcrypt.hash(this.password, saltRounds);
-  }
 
   // Exclude password from JSON response
   toJSON() {

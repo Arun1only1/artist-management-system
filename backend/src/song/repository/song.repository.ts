@@ -36,7 +36,9 @@ export class SongRepository extends BaseRepository<Song> {
     ].map((item) => `"${item}"`);
 
     // Query to get the data
-    const query = `SELECT ${columns.join(', ')} FROM ${this.tableName} WHERE artist_id=$1 LIMIT $2 OFFSET $3`;
+    const query = `SELECT ${columns.join(', ')} FROM ${this.tableName} WHERE artist_id=$1
+    ORDER BY updated_at DESC
+    LIMIT $2 OFFSET $3`;
 
     // Query to get the total count of users
     const countQuery = `SELECT COUNT(*) FROM ${this.tableName} WHERE artist_id=$1`;

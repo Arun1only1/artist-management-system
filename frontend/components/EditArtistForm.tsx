@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Box,
@@ -10,48 +10,33 @@ import {
   Select,
   TextField,
   Typography,
-} from '@mui/material';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import dayjs from 'dayjs';
-import { Formik } from 'formik';
+} from "@mui/material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs from "dayjs";
+import { Formik } from "formik";
 
 import {
   DEFAULT_DATE_FORMAT,
   genderOptions,
-} from '@/constant/general.constant';
-import ROUTES from '@/constant/route.constants';
+} from "@/constant/general.constant";
+import ROUTES from "@/constant/route.constants";
 import {
   getArtistDetails,
   updateArtist,
-} from '@/lib/api-routes/artist/artist.routes';
+} from "@/lib/api-routes/artist/artist.routes";
 import {
   openErrorSnackbar,
   openSuccessSnackbar,
-} from '@/store/slices/snackbarSlice';
-import { getMessageFromError } from '@/utils/get.message.from.error';
-import { editArtistValidationSchema } from '@/validation-schema/artist/edit.artist.validation.schema';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { useParams, useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
-import Loader from './Loader/Loader';
-
-export interface EditArtistProps {
-  id: string;
-  numberOfAlbums: number;
-  firstReleaseYear: number;
-  user: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    address: string;
-    dob: string;
-    gender: string;
-  };
-}
+} from "@/store/slices/snackbarSlice";
+import { getMessageFromError } from "@/utils/get.message.from.error";
+import { editArtistValidationSchema } from "@/validation-schema/artist/edit.artist.validation.schema";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useParams, useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import Loader from "./Loader/Loader";
 
 export interface EditArtistFormValuesType {
   id: number;
@@ -77,7 +62,7 @@ const EditArtistForm = () => {
 
   //   get artist details
   const { isPending, data } = useQuery({
-    queryKey: ['get-artist-details'],
+    queryKey: ["get-artist-details"],
     queryFn: () => getArtistDetails(artistId as string),
   });
 
@@ -85,7 +70,7 @@ const EditArtistForm = () => {
 
   //   update  artist mutation
   const { isPending: updatePending, mutate } = useMutation({
-    mutationKey: ['edit-artist'],
+    mutationKey: ["edit-artist"],
     mutationFn: async (values: EditArtistFormValuesType) => {
       return await updateArtist(artistId as string, {
         ...values,
@@ -111,15 +96,15 @@ const EditArtistForm = () => {
         enableReinitialize
         initialValues={
           {
-            firstName: artistData?.user?.firstName || '',
-            lastName: artistData?.user?.lastName || '',
-            email: artistData?.user?.email || '',
+            firstName: artistData?.firstName || "",
+            lastName: artistData?.lastName || "",
+            email: artistData?.email || "",
 
-            phone: artistData?.user?.phone || '',
-            address: artistData?.user?.address || '',
+            phone: artistData?.phone || "",
+            address: artistData?.address || "",
 
-            dob: artistData?.user?.dob || null,
-            gender: artistData?.user?.gender || '',
+            dob: artistData?.dob || null,
+            gender: artistData?.gender || "",
             firstReleaseYear: artistData?.firstReleaseYear,
             numberOfAlbums: artistData?.numberOfAlbums,
           } as EditArtistFormValuesType
@@ -137,12 +122,12 @@ const EditArtistForm = () => {
           setFieldValue,
           values,
         }) => (
-          <form onSubmit={handleSubmit} className='form w-[450px] gap-4'>
-            <Typography variant='h4'>Edit Artist</Typography>
+          <form onSubmit={handleSubmit} className="form w-[450px] gap-4">
+            <Typography variant="h4">Edit Artist</Typography>
             <FormControl fullWidth>
               <TextField
-                label='First Name'
-                {...getFieldProps('firstName')}
+                label="First Name"
+                {...getFieldProps("firstName")}
                 error={!!errors.firstName && !!touched.firstName}
               />
 
@@ -153,8 +138,8 @@ const EditArtistForm = () => {
 
             <FormControl fullWidth>
               <TextField
-                label='Last Name'
-                {...getFieldProps('lastName')}
+                label="Last Name"
+                {...getFieldProps("lastName")}
                 error={!!errors.lastName && !!touched.lastName}
               />
               {touched.lastName && errors.lastName ? (
@@ -164,8 +149,8 @@ const EditArtistForm = () => {
 
             <FormControl fullWidth>
               <TextField
-                label='Email'
-                {...getFieldProps('email')}
+                label="Email"
+                {...getFieldProps("email")}
                 error={!!errors.email && !!touched.email}
               />
               {touched.email && errors.email ? (
@@ -175,8 +160,8 @@ const EditArtistForm = () => {
 
             <FormControl fullWidth>
               <TextField
-                label='Phone Number'
-                {...getFieldProps('phone')}
+                label="Phone Number"
+                {...getFieldProps("phone")}
                 error={!!errors.phone && !!touched.phone}
               />
               {touched.phone && errors.phone ? (
@@ -186,8 +171,8 @@ const EditArtistForm = () => {
 
             <FormControl fullWidth>
               <TextField
-                label='Address'
-                {...getFieldProps('address')}
+                label="Address"
+                {...getFieldProps("address")}
                 error={!!errors.address && !!touched.address}
               />
               {touched.address && errors.address ? (
@@ -197,7 +182,7 @@ const EditArtistForm = () => {
 
             <FormControl fullWidth>
               <InputLabel>Gender</InputLabel>
-              <Select label='Gender' {...getFieldProps('gender')}>
+              <Select label="Gender" {...getFieldProps("gender")}>
                 {genderOptions.map((item) => (
                   <MenuItem key={item.id} value={item.value}>
                     {item.label}
@@ -211,19 +196,19 @@ const EditArtistForm = () => {
 
             <FormControl fullWidth>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
+                <DemoContainer components={["DatePicker"]}>
                   <DatePicker
                     value={values?.dob ? dayjs(values?.dob) : null}
                     onChange={(date) => {
                       setFieldValue(
-                        'dob',
+                        "dob",
                         dayjs(date).format(DEFAULT_DATE_FORMAT)
                       );
                     }}
-                    label='DOB'
-                    className='w-full'
+                    label="DOB"
+                    className="w-full"
                     maxDate={dayjs()}
-                    minDate={dayjs('1900-01-01')}
+                    minDate={dayjs("1900-01-01")}
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -234,9 +219,9 @@ const EditArtistForm = () => {
 
             <FormControl fullWidth>
               <TextField
-                type='number'
-                label='Number Of Albums'
-                {...getFieldProps('numberOfAlbums')}
+                type="number"
+                label="Number Of Albums"
+                {...getFieldProps("numberOfAlbums")}
                 error={!!errors.numberOfAlbums && !!touched.numberOfAlbums}
               />
               {touched.numberOfAlbums && errors.numberOfAlbums ? (
@@ -245,7 +230,7 @@ const EditArtistForm = () => {
             </FormControl>
             <FormControl fullWidth>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker', 'DatePicker']}>
+                <DemoContainer components={["DatePicker", "DatePicker"]}>
                   <DatePicker
                     value={
                       values?.firstReleaseYear
@@ -254,16 +239,16 @@ const EditArtistForm = () => {
                     }
                     onChange={(date) => {
                       setFieldValue(
-                        'firstReleaseYear',
-                        dayjs(date).format('YYYY')
+                        "firstReleaseYear",
+                        dayjs(date).format("YYYY")
                       );
                     }}
                     maxDate={dayjs()}
-                    yearsOrder='desc'
-                    label={'First release year'}
-                    openTo='year'
-                    views={['year']}
-                    className='w-full'
+                    yearsOrder="desc"
+                    label={"First release year"}
+                    openTo="year"
+                    views={["year"]}
+                    className="w-full"
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -272,7 +257,7 @@ const EditArtistForm = () => {
               )}
             </FormControl>
 
-            <Button fullWidth type='submit' variant='contained' color='success'>
+            <Button fullWidth type="submit" variant="contained" color="success">
               submit
             </Button>
           </form>

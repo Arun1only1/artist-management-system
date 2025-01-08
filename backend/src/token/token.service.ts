@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
 import { TokenPayloadInput } from './dto/token.payload.input';
+import Lang from 'src/constants/language';
 
 @Injectable()
 export class TokenService {
@@ -29,5 +30,18 @@ export class TokenService {
     );
 
     return refreshToken;
+  }
+
+  verifyRefreshToken(refreshToken: string) {
+    const refreshSecret = this.configService.get('JWT_REFRESH_TOKEN_SECRET');
+
+    try {
+      const payload = jwt.verify(refreshToken, refreshSecret) as jwt.JwtPayload;
+
+      return payload;
+    } catch (error) {
+      console.error(error);
+      throw new UnauthorizedException(Lang.UNAUTHORIZED);
+    }
   }
 }

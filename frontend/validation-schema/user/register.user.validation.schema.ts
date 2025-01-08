@@ -5,17 +5,17 @@ import {
   PHONE_MAX_LENGTH,
   PHONE_MIN_LENGTH,
   ADDRESS_MAX_LENGTH,
-} from '../../constant/general.constant';
-import * as Yup from 'yup';
+} from "../../constant/general.constant";
+import * as Yup from "yup";
 
-import MSG from '../../constant/validation.messages';
+import MSG from "../../constant/validation.messages";
 
-import { Gender } from '../../constant/enums/gender.enum';
-import { Role } from '../../constant/enums/role.enum';
+import { Gender } from "../../constant/enums/gender.enum";
 import {
   PASSWORD_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
-} from '../../constant/general.constant';
+} from "../../constant/general.constant";
+import { Role } from "@/permissions/role.enum";
 export const registerUserValidationSchema = Yup.object({
   firstName: Yup.string()
     .required(MSG.FIRST_NAME_REQUIRED)
@@ -37,7 +37,11 @@ export const registerUserValidationSchema = Yup.object({
   password: Yup.string()
     .required(MSG.PASSWORD_REQUIRED)
     .min(PASSWORD_MIN_LENGTH, MSG.PASSWORD_MIN_LENGTH)
-    .max(PASSWORD_MAX_LENGTH, MSG.PASSWORD_MAX_LENGTH),
+    .max(PASSWORD_MAX_LENGTH, MSG.PASSWORD_MAX_LENGTH)
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      MSG.PASSWORD_VALID_PATTERN
+    ),
 
   phone: Yup.string()
     .required(MSG.PHONE_REQUIRED)
@@ -47,8 +51,8 @@ export const registerUserValidationSchema = Yup.object({
   role: Yup.string()
     .required(MSG.ROLE_REQUIRED)
     .oneOf(
-      [Role.SUPER_ADMIN, Role.ARTIST_MANAGER, Role.ARTIST],
-      MSG.ROLE_OPTIONS
+      [Role.SUPER_ADMIN, Role.ARTIST_MANAGER],
+      MSG.ROLE_ADMIN_OR_ARTIST_MANAGER
     ),
 
   dob: Yup.date().required(MSG.DOB_REQUIRED),

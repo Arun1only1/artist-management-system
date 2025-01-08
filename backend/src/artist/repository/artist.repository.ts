@@ -115,4 +115,34 @@ export class ArtistRepository extends BaseRepository<Artist> {
 
     return res[0];
   }
+
+  async findAllArtists() {
+    const columns = [
+      'firstName',
+      'lastName',
+      'email',
+      'dob',
+      'gender',
+      'phone',
+      'address',
+      'firstReleaseYear',
+      'numberOfAlbums',
+    ].map((item) => `"${item}"`);
+
+    // Query to get the data
+    const query = `SELECT artist."id", ${columns.join(', ')}
+                   FROM artist 
+                   LEFT JOIN users ON users.id = artist.users_id 
+                   ORDER BY artist."updated_at" DESC`;
+
+    try {
+      // Fetching the data
+      const res = await this.collectionName.query(query, []);
+
+      return res;
+    } catch (error) {
+      console.error('Error executing query:', error);
+      throw new Error('Unable to fetch data');
+    }
+  }
 }

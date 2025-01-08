@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Box,
@@ -10,22 +10,22 @@ import {
   Select,
   TextField,
   Typography,
-} from '@mui/material';
-import { Formik } from 'formik';
+} from "@mui/material";
+import { Formik } from "formik";
 
-import { genreOptions } from '@/constant/general.constant';
-import { getSongDetails, updateSong } from '@/lib/api-routes/song/song.routes';
-import { addSongValidationSchema } from '@/validation-schema/song/add.song.validation.schema';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { useParams, useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
-import Loader from './Loader/Loader';
-import ROUTES from '@/constant/route.constants';
+import { genreOptions } from "@/constant/general.constant";
+import { getSongDetails, updateSong } from "@/lib/api-routes/song/song.routes";
+import { addSongValidationSchema } from "@/validation-schema/song/add.song.validation.schema";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useParams, useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import Loader from "./Loader/Loader";
+import ROUTES from "@/constant/route.constants";
 import {
   openErrorSnackbar,
   openSuccessSnackbar,
-} from '@/store/slices/snackbarSlice';
-import { getMessageFromError } from '@/utils/get.message.from.error';
+} from "@/store/slices/snackbarSlice";
+import { getMessageFromError } from "@/utils/get.message.from.error";
 
 export interface SongDataProps {
   title: string;
@@ -43,7 +43,7 @@ const EditSongForm = () => {
 
   //   get artist details
   const { isPending, data } = useQuery({
-    queryKey: ['get-song-details'],
+    queryKey: ["get-song-details"],
     queryFn: () => getSongDetails(songId as string),
   });
 
@@ -51,7 +51,7 @@ const EditSongForm = () => {
 
   // update  artist mutation
   const { isPending: updatePending, mutate } = useMutation({
-    mutationKey: ['edit-song'],
+    mutationKey: ["edit-song"],
     mutationFn: async (values: SongDataProps) => {
       return await updateSong(songId as string, values);
     },
@@ -73,9 +73,9 @@ const EditSongForm = () => {
       <Formik
         enableReinitialize
         initialValues={{
-          title: songData.title || '',
-          albumName: songData.albumName || '',
-          genre: songData.genre || '',
+          title: songData.title || "",
+          albumName: songData.albumName || "",
+          genre: songData.genre || "",
         }}
         validationSchema={addSongValidationSchema}
         onSubmit={(values) => {
@@ -83,12 +83,12 @@ const EditSongForm = () => {
         }}
       >
         {({ handleSubmit, getFieldProps, errors, touched }) => (
-          <form onSubmit={handleSubmit} className='form w-[450px] gap-4'>
-            <Typography variant='h4'>Edit Song</Typography>
+          <form onSubmit={handleSubmit} className="form w-[400px] gap-4">
+            <Typography variant="h4">Edit Song</Typography>
             <FormControl fullWidth>
               <TextField
-                label='Title'
-                {...getFieldProps('title')}
+                label="Title"
+                {...getFieldProps("title")}
                 error={!!errors.title && !!touched.title}
               />
 
@@ -99,8 +99,8 @@ const EditSongForm = () => {
 
             <FormControl fullWidth>
               <TextField
-                label='Album Name'
-                {...getFieldProps('albumName')}
+                label="Album Name"
+                {...getFieldProps("albumName")}
                 error={!!errors.albumName && !!touched.albumName}
               />
               {touched.albumName && errors.albumName ? (
@@ -110,7 +110,7 @@ const EditSongForm = () => {
 
             <FormControl fullWidth>
               <InputLabel>Genre</InputLabel>
-              <Select label='Genre' {...getFieldProps('genre')}>
+              <Select label="Genre" {...getFieldProps("genre")}>
                 {genreOptions.map((item) => (
                   <MenuItem key={item.id} value={item.value}>
                     {item.label}
@@ -122,7 +122,13 @@ const EditSongForm = () => {
               )}
             </FormControl>
 
-            <Button fullWidth type='submit' variant='contained' color='success'>
+            <Button
+              fullWidth
+              type="submit"
+              variant="contained"
+              color="success"
+              size="small"
+            >
               submit
             </Button>
           </form>

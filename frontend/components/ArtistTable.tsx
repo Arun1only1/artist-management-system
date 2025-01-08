@@ -2,7 +2,13 @@
 
 import ROUTES from "@/constant/route.constants";
 import { getArtistList } from "@/lib/api-routes/artist/artist.routes";
+import { Action } from "@/permissions/action.enum";
+import { hasPermission } from "@/permissions/component.permission";
+import { Resource } from "@/permissions/resource.enum";
+import { formatDate } from "@/utils/format.date";
+import { getGenderLabel } from "@/utils/get.gender.label";
 import EditNoteOutlinedIcon from "@mui/icons-material/EditNoteOutlined";
+import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import { IconButton, Pagination, Tooltip, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -15,10 +21,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import DeleteArtistDialog from "./DeleteArtistDialog";
+import ErrorItem from "./ErrorItem";
 import Loader from "./Loader/Loader";
-import { formatDate } from "@/utils/format.date";
-import { getGenderLabel } from "@/utils/get.gender.label";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import NoItemFound from "./NoItemFound";
 export interface ArtistProps {
   id: string;
   firstName: string;
@@ -37,12 +42,11 @@ const ArtistTable = () => {
   const router = useRouter();
   // page
   const [page, setPage] = useState(1);
-  const { isPending, data } = useQuery({
+  const { isPending, data, error } = useQuery({
     queryKey: ["get-artist-list", page],
     queryFn: () => {
       return getArtistList({ page, limit: 10 });
     },
-    // TODO:error handle
   });
 
   const artistList: ArtistProps[] = data?.data?.artistList?.result;
@@ -52,6 +56,13 @@ const ArtistTable = () => {
     return <Loader />;
   }
 
+  if (error) {
+    return <ErrorItem />;
+  }
+
+  if (!artistList.length) {
+    return <NoItemFound />;
+  }
   return (
     <div className="w-screen  lg:w-4/5 flex flex-col justify-center items-center ">
       <TableContainer
@@ -135,26 +146,34 @@ const ArtistTable = () => {
                 </TableCell>
                 <TableCell align="center">
                   <div className="flex justify-center items-center">
-                    <Tooltip title="Songs">
-                      <IconButton
-                        color="primary"
-                        onClick={() => {
-                          router.push(`${ROUTES.ARTIST_SONG_LIST}/${item.id}`);
-                        }}
-                      >
-                        <RemoveRedEyeOutlinedIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Edit">
-                      <IconButton
-                        color="success"
-                        onClick={() => {
-                          router.push(`${ROUTES.EDIT_ARTIST}/${item.id}`);
-                        }}
-                      >
-                        <EditNoteOutlinedIcon />
-                      </IconButton>
-                    </Tooltip>
+                    {hasPermission(Resource.ARTIST, Action.READ) && (
+                      <Tooltip title="Songs">
+                        <IconButton
+                          color="primary"
+                          onClick={() => {
+                            router.push(
+                              `${ROUTES.ARTIST_SONG_LIST}/${item.id}`
+                            );
+                          }}
+                        >
+                          <RemoveRedEyeOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+
+                    {hasPermission(Resource.ARTIST, Action.UPDATE) && (
+                      <Tooltip title="Edit">
+                        <IconButton
+                          color="success"
+                          onClick={() => {
+                            router.push(`${ROUTES.EDIT_ARTIST}/${item.id}`);
+                          }}
+                        >
+                          <EditNoteOutlinedIcon />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+
                     <DeleteArtistDialog artistId={item.id} />
                   </div>
                 </TableCell>

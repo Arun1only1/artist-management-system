@@ -1,4 +1,4 @@
-import * as Yup from 'yup';
+import * as Yup from "yup";
 import {
   ADDRESS_MAX_LENGTH,
   EMAIL_MAX_LENGTH,
@@ -10,12 +10,12 @@ import {
   PASSWORD_MIN_LENGTH,
   PHONE_MAX_LENGTH,
   PHONE_MIN_LENGTH,
-} from '../../constant/general.constant';
+} from "../../constant/general.constant";
 
-import MSG from '../../constant/validation.messages';
+import MSG from "../../constant/validation.messages";
 
-import { Gender } from '../../constant/enums/gender.enum';
-import dayjs from 'dayjs';
+import { Gender } from "../../constant/enums/gender.enum";
+import dayjs from "dayjs";
 
 export const addArtistValidationSchema = Yup.object({
   firstName: Yup.string()
@@ -38,8 +38,11 @@ export const addArtistValidationSchema = Yup.object({
   password: Yup.string()
     .required(MSG.PASSWORD_REQUIRED)
     .min(PASSWORD_MIN_LENGTH, MSG.PASSWORD_MIN_LENGTH)
-    .max(PASSWORD_MAX_LENGTH, MSG.PASSWORD_MAX_LENGTH),
-
+    .max(PASSWORD_MAX_LENGTH, MSG.PASSWORD_MAX_LENGTH)
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      MSG.PASSWORD_VALID_PATTERN
+    ),
   phone: Yup.string()
     .required(MSG.PHONE_REQUIRED)
     .max(PHONE_MAX_LENGTH, MSG.PHONE_MAX_LENGTH)
@@ -48,7 +51,7 @@ export const addArtistValidationSchema = Yup.object({
   dob: Yup.date()
     .required(MSG.DOB_REQUIRED)
     .test(
-      'dob',
+      "dob",
       MSG.DOB_CANNOT_BE_GREATER_THAN_FIRST_RELEASE_YEAR,
       function (value) {
         const { firstReleaseYear } = this.parent;

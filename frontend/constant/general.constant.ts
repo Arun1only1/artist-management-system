@@ -13,23 +13,25 @@ export const ADDRESS_MAX_LENGTH = 255;
 
 export const DEFAULT_LIMIT = 10;
 
+export const REGISTER = "register";
+
 // gender
 
 export const genderOptions = [
   {
     id: 1,
-    value: 'm',
-    label: 'Male',
+    value: "m",
+    label: "Male",
   },
   {
     id: 2,
-    value: 'f',
-    label: 'Female',
+    value: "f",
+    label: "Female",
   },
   {
     id: 3,
-    value: 'o',
-    label: 'Other',
+    value: "o",
+    label: "Other",
   },
 ];
 
@@ -37,53 +39,66 @@ export const genderOptions = [
 export const roleOptions = [
   {
     id: 1,
-    value: 'super_admin',
-    label: 'Super Admin',
+    value: "super_admin",
+    label: "Super Admin",
   },
   {
     id: 2,
-    value: 'artist_manager',
-    label: 'Artist manager',
+    value: "artist_manager",
+    label: "Artist manager",
   },
   {
     id: 3,
-    value: 'artist',
-    label: 'Artist',
+    value: "artist",
+    label: "Artist",
+  },
+];
+
+export const registerUserRoleOptions = [
+  {
+    id: 1,
+    value: "super_admin",
+    label: "Super Admin",
+  },
+  {
+    id: 2,
+    value: "artist_manager",
+    label: "Artist manager",
   },
 ];
 
 export const genreOptions = [
   {
     id: 1,
-    value: 'rnb',
-    label: 'RNB',
+    value: "rnb",
+    label: "RNB",
   },
   {
     id: 2,
-    value: 'country',
-    label: 'Country',
+    value: "country",
+    label: "Country",
   },
   {
     id: 3,
-    value: 'classic',
-    label: 'Classic',
+    value: "classic",
+    label: "Classic",
   },
   {
     id: 4,
-    value: 'rock',
-    label: 'Rock',
+    value: "rock",
+    label: "Rock",
   },
   {
     id: 5,
-    value: 'jazz',
-    label: 'Jazz',
+    value: "jazz",
+    label: "Jazz",
   },
 ];
 export const TITLE_MAX_LENGTH = 255;
 export const ALBUM_NAME_MAX_LENGTH = 255;
 export const GENRE_MAX_LENGTH = 255;
 
-export const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD';
+export const DEFAULT_DATE_FORMAT = "YYYY-MM-DD";
 
 export const FIRST_RELEASE_YEAR_MIN_VALUE = 1900;
 export const MIN_NUMBER_OF_ALBUMS = 0;

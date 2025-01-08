@@ -31,4 +31,8 @@ export class ReadArtistService {
 
     return artist;
   }
+
+  async getAllArtist() {
+    return await this.artistRepository.findAllArtists();
+  }
 }

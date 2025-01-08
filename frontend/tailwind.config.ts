@@ -1,19 +1,20 @@
-import type { Config } from 'tailwindcss';
+import type { Config } from "tailwindcss";
 
 export default {
   content: [
-    './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       colors: {
-        background: 'var(--background)',
-        foreground: 'var(--foreground)',
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        muipink: "#9c27b0",
       },
       animation: {
-        'spin-slow': 'spin 1.5s linear infinite',
+        ping: "ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite",
       },
     },
   },

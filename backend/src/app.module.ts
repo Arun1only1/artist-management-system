@@ -11,6 +11,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { TokenModule } from './token/token.module';
 import { UserModule } from './user/user.module';
 import { SongModule } from './song/song.module';
+import { CsvModule } from './csv/csv.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { SongModule } from './song/song.module';
     TokenModule,
     ArtistModule,
     SongModule,
+    CsvModule,
   ],
   controllers: [AppController],
   providers: [

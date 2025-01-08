@@ -28,6 +28,10 @@ import { useDispatch } from "react-redux";
 import { openErrorSnackbar } from "@/store/slices/snackbarSlice";
 import { CustomError } from "@/interface/error.interface";
 import { getMessageFromError } from "@/utils/get.message.from.error";
+import { hasPermission } from "@/permissions/component.permission";
+import { Resource } from "@/permissions/resource.enum";
+import { Action } from "@/permissions/action.enum";
+import ROUTES from "@/constant/route.constants";
 
 export interface LoginUserProps {
   email: string;
@@ -66,12 +70,23 @@ const LoginForm = () => {
         "userSession",
         JSON.stringify({
           accessToken: res?.data?.accessToken,
+          refreshToken: res?.data?.refreshToken,
           role: res?.data?.userDetails?.role,
           permissions: res?.data?.permissions,
         })
       );
 
-      router.push("/");
+      // get home routes
+      let homeRoute = null;
+      if (hasPermission(Resource.USER, Action.READ)) {
+        homeRoute = ROUTES.HOME;
+      } else if (hasPermission(Resource.ARTIST, Action.READ)) {
+        homeRoute = ROUTES.ARTIST;
+      } else {
+        homeRoute = ROUTES.SONG;
+      }
+
+      router.push(homeRoute);
     },
     onError: (error: CustomError) => {
       dispatch(openErrorSnackbar({ message: getMessageFromError(error) }));
@@ -132,10 +147,12 @@ const LoginForm = () => {
 
             <FormControl fullWidth className="flex justify-center items-center">
               <Button
+                disabled={isPending}
                 fullWidth
                 type="submit"
                 variant="contained"
                 color="success"
+                size="small"
               >
                 Sign in
               </Button>

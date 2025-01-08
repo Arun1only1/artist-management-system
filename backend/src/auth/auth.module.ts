@@ -6,6 +6,7 @@ import { User } from 'src/user/entities/user.entity';
 import { UserModule } from 'src/user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { TokenRefreshService } from './refresh.token.service';
 
 @Module({
   imports: [
@@ -15,6 +16,6 @@ import { AuthService } from './auth.service';
     ArtistModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, TokenRefreshService],
 })
 export class AuthModule {}

@@ -7,8 +7,11 @@ export const USER_FIRST_NAME_MAX_LENGTH = 255;
 export const USER_LAST_NAME_MAX_LENGTH = 255;
 export const USER_EMAIL_MAX_LENGTH = 255;
 export const USER_PASSWORD_MAX_LENGTH = 20;
+export const USER_PASSWORD_MIN_LENGTH = 8;
 export const USER_PASSWORD_MAX_LENGTH_IN_DB = 500;
 export const USER_PHONE_MAX_LENGTH = 20;
+export const USER_PHONE_MIN_LENGTH = 10;
+
 export const USER_ADDRESS_MAX_LENGTH = 255;
 
 export const DEFAULT_PAGE = 1;
@@ -18,3 +21,5 @@ export const ARTIST_MIN_ALBUM_NUMBER = 0;
 export const ARTIST_MIN_RELEASE_YEAR = 1900;
 
 export const SALT_ROUNDS = 10;
+
+export const MAX_UPLOAD_FILE_SIZE = 50; //MB

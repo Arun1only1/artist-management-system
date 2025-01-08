@@ -1,7 +1,7 @@
-import AddSongForm from '@/app/(home)/song/add/page';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import * as React from 'react';
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import * as React from "react";
+import AddSongForm from "./AddSongForm";
 
 const AddSongDialog = () => {
   const [open, setOpen] = React.useState(false);
@@ -16,15 +16,15 @@ const AddSongDialog = () => {
 
   return (
     <React.Fragment>
-      <Button variant='contained' color='success' onClick={handleClickOpen}>
+      <Button
+        variant="outlined"
+        color="secondary"
+        size="small"
+        onClick={handleClickOpen}
+      >
         Add Song
       </Button>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-      >
+      <Dialog open={open} onClose={handleClose}>
         <AddSongForm handleClose={handleClose} />
       </Dialog>
     </React.Fragment>

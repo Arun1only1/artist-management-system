@@ -122,7 +122,7 @@ const EditArtistForm = () => {
           setFieldValue,
           values,
         }) => (
-          <form onSubmit={handleSubmit} className="form w-[450px] gap-4">
+          <form onSubmit={handleSubmit} className="form w-[400px] gap-4">
             <Typography variant="h4">Edit Artist</Typography>
             <FormControl fullWidth>
               <TextField
@@ -257,7 +257,13 @@ const EditArtistForm = () => {
               )}
             </FormControl>
 
-            <Button fullWidth type="submit" variant="contained" color="success">
+            <Button
+              fullWidth
+              type="submit"
+              size="small"
+              color="success"
+              variant="contained"
+            >
               submit
             </Button>
           </form>

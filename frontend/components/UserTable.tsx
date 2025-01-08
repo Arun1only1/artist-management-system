@@ -1,27 +1,32 @@
-'use client';
+"use client";
 
-import { getUserList } from '@/lib/api-routes/user/user.routes';
-import { getGenderLabel } from '@/utils/get.gender.label';
-import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
-import { IconButton, Pagination, Tooltip, Typography } from '@mui/material';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import { useQuery } from '@tanstack/react-query';
-import dayjs from 'dayjs';
-import { useState, useCallback } from 'react';
-import DeleteUserDialog from './DeleteUserDialog';
-import Loader from './Loader/Loader';
-import { useRouter } from 'next/navigation';
-import ROUTES from '@/constant/route.constants';
+import { getUserList } from "@/lib/api-routes/user/user.routes";
+import { getGenderLabel } from "@/utils/get.gender.label";
+import EditNoteOutlinedIcon from "@mui/icons-material/EditNoteOutlined";
+import { IconButton, Pagination, Tooltip, Typography } from "@mui/material";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import { useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import { useState, useCallback } from "react";
+import DeleteUserDialog from "./DeleteUserDialog";
+import Loader from "./Loader/Loader";
+import { useRouter } from "next/navigation";
+import ROUTES from "@/constant/route.constants";
 import {
   DEFAULT_DATE_FORMAT,
   DEFAULT_LIMIT,
-} from '@/constant/general.constant';
+} from "@/constant/general.constant";
+import { hasPermission } from "@/permissions/component.permission";
+import { Resource } from "@/permissions/resource.enum";
+import { Action } from "@/permissions/action.enum";
+import ErrorItem from "./ErrorItem";
+import NoItemFound from "./NoItemFound";
 
 interface UserType {
   id: string;
@@ -41,11 +46,11 @@ const UserTable = () => {
   const router = useRouter();
   const [page, setPage] = useState(1);
   const { isPending, data, isError } = useQuery({
-    queryKey: ['get-user-list', page],
+    queryKey: ["get-user-list", page],
     queryFn: () => getUserList({ page, limit: DEFAULT_LIMIT }),
   });
 
-  const userList: UserType[] = data?.data?.userList?.result;
+  const userList: UserType[] = data?.data?.userList?.result || [];
   const totalPages: number = data?.data?.userList?.totalPages;
 
   const handlePageChange = useCallback(
@@ -59,52 +64,52 @@ const UserTable = () => {
     return <Loader />;
   }
 
-  if (isError || !userList) {
-    return (
-      <Typography variant='h6'>
-        Error fetching users. Please try again later.
-      </Typography>
-    );
+  if (isError) {
+    return <ErrorItem />;
+  }
+
+  if (userList?.length === 0) {
+    return <NoItemFound />;
   }
 
   return (
-    <div className='sm:w-full lg:w-4/5 flex flex-col justify-center items-center'>
+    <div className="sm:w-full lg:w-4/5 flex flex-col justify-center items-center">
       <TableContainer component={Paper}>
         <Typography
-          variant='h6'
-          component='div'
-          sx={{ marginBottom: 2, ml: '1rem' }}
+          variant="h6"
+          component="div"
+          sx={{ marginBottom: 2, ml: "1rem" }}
         >
           User List
         </Typography>
-        <Table className='w-full'>
+        <Table className="w-full">
           <TableHead>
             <TableRow>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 S.N.
               </TableCell>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 Name
               </TableCell>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 Email
               </TableCell>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 DOB
               </TableCell>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 Gender
               </TableCell>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 Role
               </TableCell>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 Phone
               </TableCell>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 Address
               </TableCell>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 Actions
               </TableCell>
             </TableRow>
@@ -114,30 +119,32 @@ const UserTable = () => {
               <TableRow
                 key={item.id}
                 sx={{
-                  '&:last-child td, &:last-child th': { border: 0 },
-                  '&:hover': { backgroundColor: '#f5f5f5', cursor: 'pointer' },
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  "&:hover": { backgroundColor: "#f5f5f5", cursor: "pointer" },
                 }}
               >
-                <TableCell align='center'>{index + 1}</TableCell>
-                <TableCell align='center' sx={{ textTransform: 'capitalize' }}>
+                <TableCell align="center">{index + 1}</TableCell>
+                <TableCell align="center" sx={{ textTransform: "capitalize" }}>
                   {`${item.firstName} ${item.lastName}`}
                 </TableCell>
-                <TableCell align='center'>{item.email}</TableCell>
-                <TableCell align='center'>
+                <TableCell align="center">{item.email}</TableCell>
+                <TableCell align="center">
                   {dayjs(item.dob).format(DEFAULT_DATE_FORMAT)}
                 </TableCell>
-                <TableCell align='center'>
+                <TableCell align="center">
                   {getGenderLabel(item.gender)}
                 </TableCell>
-                <TableCell align='center'>{item.role}</TableCell>
-                <TableCell align='center'>{item.phone}</TableCell>
-                <TableCell align='center'>{item.address}</TableCell>
-                <TableCell align='center'>
-                  <div className='flex justify-around items-center'>
+                <TableCell align="center">{item.role}</TableCell>
+                <TableCell align="center">{item.phone}</TableCell>
+                <TableCell align="center">{item.address}</TableCell>
+                <TableCell align="center">
+                  <div className="flex justify-around items-center">
                     <DeleteUserDialog userId={item.id} />
-                    <Tooltip title='Edit User'>
+
+                    <Tooltip title="Edit User">
                       <IconButton
-                        color='success'
+                        disabled={!hasPermission(Resource.USER, Action.UPDATE)}
+                        color="success"
                         onClick={() =>
                           router.push(`${ROUTES.EDIT_USER}/${item.id}`)
                         }
@@ -156,8 +163,8 @@ const UserTable = () => {
       <Pagination
         page={page}
         count={totalPages}
-        color='secondary'
-        className='my-12'
+        color="secondary"
+        className="my-12"
         onChange={handlePageChange}
       />
     </div>

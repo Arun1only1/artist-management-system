@@ -1,10 +1,10 @@
-'use client';
-import { DEFAULT_LIMIT } from '@/constant/general.constant';
-import { getSongList } from '@/lib/api-routes/song/song.routes';
-import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
-import React, { useState } from 'react';
-import Loader from './Loader/Loader';
+"use client";
+import { DEFAULT_LIMIT } from "@/constant/general.constant";
+import { getSongList } from "@/lib/api-routes/song/song.routes";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+import React, { useState } from "react";
+import Loader from "./Loader/Loader";
 import {
   Pagination,
   Paper,
@@ -15,8 +15,10 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from '@mui/material';
-import { SongProps } from './SongTable';
+} from "@mui/material";
+import { SongProps } from "./SongTable";
+import ErrorItem from "./ErrorItem";
+import NoItemFound from "./NoItemFound";
 
 const ArtistSongs = () => {
   const [page, setPage] = useState(1);
@@ -24,8 +26,8 @@ const ArtistSongs = () => {
 
   const artistId = params?.id;
 
-  const { data, isPending } = useQuery({
-    queryKey: ['artist-song-list'],
+  const { data, isPending, error } = useQuery({
+    queryKey: ["artist-song-list"],
     queryFn: async () => {
       return await getSongList({
         page: 1,
@@ -35,40 +37,48 @@ const ArtistSongs = () => {
     },
   });
 
-  const songList: SongProps[] = data?.data?.songList?.result;
+  const songList: SongProps[] = data?.data?.songList?.result || [];
   const totalPage = data?.data?.totalPage;
 
   if (isPending) {
     return <Loader />;
   }
 
+  if (error) {
+    return <ErrorItem />;
+  }
+
+  if (songList?.length === 0) {
+    return <NoItemFound />;
+  }
+
   return (
-    <div className='w-screen  lg:w-4/5 flex flex-col justify-center items-center '>
+    <div className="w-screen  lg:w-4/5 flex flex-col justify-center items-center ">
       <TableContainer
         component={Paper}
         sx={{ boxShadow: 3 }}
-        className='overflow-x-auto w-full'
+        className="overflow-x-auto w-full"
       >
         <Typography
-          variant='h6'
-          component='div'
-          sx={{ marginBottom: 2, ml: '1rem' }}
+          variant="h6"
+          component="div"
+          sx={{ marginBottom: 2, ml: "1rem" }}
         >
           Song List
         </Typography>
-        <Table className='w-full min-w-[600px]'>
+        <Table className="w-full min-w-[600px]">
           <TableHead>
-            <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 S.N.
               </TableCell>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 Title
               </TableCell>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 Album Name
               </TableCell>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 Genre
               </TableCell>
             </TableRow>
@@ -78,18 +88,18 @@ const ArtistSongs = () => {
               <TableRow
                 key={item.id}
                 sx={{
-                  '&:last-child td, &:last-child th': { border: 0 },
-                  '&:hover': { backgroundColor: '#f1f1f1' },
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  "&:hover": { backgroundColor: "#f1f1f1" },
                 }}
               >
-                <TableCell align='center'>{index + 1}</TableCell>
-                <TableCell align='center' className='capitalize'>
+                <TableCell align="center">{index + 1}</TableCell>
+                <TableCell align="center" className="capitalize">
                   {item.title}
                 </TableCell>
-                <TableCell align='center' className='capitalize'>
+                <TableCell align="center" className="capitalize">
                   {item.albumName}
                 </TableCell>
-                <TableCell align='center' className='capitalize'>
+                <TableCell align="center" className="capitalize">
                   {item.genre}
                 </TableCell>
               </TableRow>
@@ -100,8 +110,8 @@ const ArtistSongs = () => {
       <Pagination
         page={page}
         count={totalPage}
-        color='secondary'
-        className='my-12'
+        color="secondary"
+        className="my-12"
         onChange={(_, pageNumber) => {
           setPage(pageNumber);
         }}

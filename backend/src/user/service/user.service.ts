@@ -29,10 +29,6 @@ export class UserService {
     return await this.userRepository.deleteById(userId);
   }
 
-  async deleteUserByCondition(condition) {
-    return this.userRepository.deleteByCondition(condition);
-  }
-
   async findUserById(userId: string) {
     const user = await this.userRepository.findDataById(userId);
 

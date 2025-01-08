@@ -1,14 +1,10 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 
 import Lang from 'src/constants/language';
+import { UserRole } from 'src/user/enum/user.role.enum';
 import { UserService } from 'src/user/service/user.service';
 import { UpdateArtistInput } from '../dto/input/update.artist.input';
 import { ArtistRepository } from '../repository/artist.repository';
-import { UserRole } from 'src/user/enum/user.role.enum';
 
 @Injectable()
 export class UpdateArtistService {
@@ -18,7 +14,7 @@ export class UpdateArtistService {
   ) {}
 
   async updateArtist(
-    id: string,
+    artistId: string,
     {
       firstName,
       lastName,
@@ -31,16 +27,14 @@ export class UpdateArtistService {
       dob,
     }: UpdateArtistInput,
   ) {
-    const artist = await this.artistRepository.findDataByConditionAndRelations(
-      { id },
-      ['user'],
-    );
+    const artist = await this.artistRepository.findDataById(artistId);
 
     if (!artist) {
-      throw new NotFoundException(Lang.ARTIST_NOT_FOUND);
+      throw new UnprocessableEntityException(Lang.ARTIST_NOT_FOUND);
     }
 
-    const artistUserId = artist?.user?.id;
+    // extract user id from artist data
+    const artistUserId = artist.users_id;
 
     if (!artistUserId) {
       throw new UnprocessableEntityException(Lang.SOMETHING_WENT_WRONG);
@@ -57,7 +51,7 @@ export class UpdateArtistService {
       role: UserRole.ARTIST,
     });
 
-    return await this.artistRepository.updateDataById(id, {
+    return await this.artistRepository.updateArtistById(artistId, {
       name: `${firstName} ${lastName}`,
       firstReleaseYear,
       numberOfAlbums,

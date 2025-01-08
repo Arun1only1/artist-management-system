@@ -5,15 +5,12 @@ import {
 } from '@nestjs/common';
 
 import Lang from 'src/constants/language';
-import { SongRepository } from '../repository/song.repository';
-import { SongDetailService } from './song.detail.service';
 import { ReadArtistService } from 'src/artist/service/read.artist.service';
-
+import { SongRepository } from '../repository/song.repository';
 @Injectable()
 export class DeleteSongService {
   constructor(
     private readonly readArtistService: ReadArtistService,
-    private readonly songDetailService: SongDetailService,
     private readonly songRepository: SongRepository,
   ) {}
 
@@ -27,15 +24,15 @@ export class DeleteSongService {
     }
 
     // find song using song id
-    const song = await this.songDetailService.findSongByConditionAndRelation(
-      {
-        id: songId,
-      },
-      ['artist'],
-    );
+    const song = await this.songRepository.findDataById(songId);
 
-    // check is owner of resource
-    if (song.artist.id !== artist.id) {
+    // song does not exit
+    if (!song) {
+      throw new ForbiddenException(Lang.NOT_OWNER_OF_RESOURCE);
+    }
+
+    // check ownership
+    if (song.artist_id !== artist.id) {
       throw new ForbiddenException(Lang.NOT_OWNER_OF_RESOURCE);
     }
 

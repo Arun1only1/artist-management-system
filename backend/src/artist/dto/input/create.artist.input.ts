@@ -1,4 +1,3 @@
-import { Transform } from 'class-transformer';
 import {
   IsNotEmpty,
   IsNumber,
@@ -29,6 +28,7 @@ export class CreateArtistInput {
   @IsNotEmpty({ message: MSG.PROPERTY_REQUIRED })
   numberOfAlbums: number;
 
+  // TODO:
   @IsOptional()
   user?: User;
 }

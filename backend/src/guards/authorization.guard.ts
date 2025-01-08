@@ -8,6 +8,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Permission, userRoles } from 'src/user/roles/role.and.permission';
 import { PERMISSION_KEY } from '../decorators/permission.decorator';
+import Lang from 'src/constants/language';
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
@@ -20,14 +21,14 @@ export class AuthorizationGuard implements CanActivate {
     );
 
     if (!routePermissions || routePermissions.length === 0) {
-      throw new ForbiddenException('No permissions defined for this route.');
+      throw new ForbiddenException(Lang.NO_PERMISSION_FOR_THIS_ROUTE);
     }
 
     const request = context.switchToHttp().getRequest();
     const { userId, userRole } = request;
 
     if (!userId || !userRole) {
-      throw new UnauthorizedException('User is not authenticated.');
+      throw new UnauthorizedException(Lang.USER_NOT_AUTHENTICATED);
     }
 
     const userPermissions = userRoles.find(
@@ -35,7 +36,7 @@ export class AuthorizationGuard implements CanActivate {
     )?.permissions;
 
     if (!userPermissions) {
-      throw new ForbiddenException('User role has no permissions assigned.');
+      throw new ForbiddenException(Lang.USER_ROLE_HAS_NO_PERMISSION);
     }
 
     for (const routePermission of routePermissions) {
@@ -50,9 +51,7 @@ export class AuthorizationGuard implements CanActivate {
           routePermission.actions,
         )
       ) {
-        throw new ForbiddenException(
-          'User does not have required permissions.',
-        );
+        throw new ForbiddenException(Lang.USER_DOES_NOT_HAVE_PERMISSION);
       }
     }
 

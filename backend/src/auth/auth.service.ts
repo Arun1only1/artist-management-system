@@ -4,63 +4,71 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { CreateArtistService } from 'src/artist/service/create.artist.service';
+import { SALT_ROUNDS } from 'src/constants/general.constants';
 import Lang from 'src/constants/language';
 import { TokenService } from 'src/token/token.service';
 import { UserService } from 'src/user/service/user.service';
 import { LoginUserInput } from './dto/input/login.user.input';
 import { RegisterUserInput } from './dto/input/register.user.input';
-import { UserRole } from 'src/user/enum/user.role.enum';
-import { CreateArtistService } from 'src/artist/service/create.artist.service';
-import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
+  private readonly saltRounds = SALT_ROUNDS;
   constructor(
     private readonly userService: UserService,
     private readonly tokenService: TokenService,
     private readonly createArtistService: CreateArtistService,
   ) {}
 
-  async registerUser(registerUserInput: RegisterUserInput) {
+  async registerUser({
+    firstName,
+    lastName,
+    email,
+    password,
+    phone,
+    dob,
+    gender,
+    address,
+    role,
+  }: RegisterUserInput) {
     // find user with email
-    const userExists = await this.userService.findUserByCondition({
-      email: registerUserInput.email,
-    });
+    const userExists = await this.userService.findUserByEmail(email);
 
     // if user, throw error
     if (userExists) {
       throw new ConflictException(Lang.EMAIL_ALREADY_EXISTS);
     }
 
-    // create user
-    const newUser: User = await this.userService.addUser(registerUserInput);
+    const hashedPassword = await bcrypt.hash(password, this.saltRounds);
 
-    if (registerUserInput.role === UserRole.ARTIST) {
-      await this.createArtistService.createArtist({
-        name: `${registerUserInput.firstName} ${registerUserInput.lastName}`,
-        numberOfAlbums: registerUserInput.numberOfAlbums,
-        firstReleaseYear: registerUserInput.firstReleaseYear,
-        user: newUser,
-      });
-    }
+    return await this.userService.addUser({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      phone,
+      dob,
+      gender,
+      address,
+      role,
+    });
   }
 
   async loginUser(loginCredentials: LoginUserInput) {
     const { email, password } = loginCredentials;
 
-    const user = await this.userService.findUserByCondition({
-      email,
-    });
+    const user = await this.userService.findUserByEmail(email);
 
     if (!user) {
-      throw new NotFoundException('Invalid credentials.');
+      throw new NotFoundException(Lang.INVALID_CREDENTIALS);
     }
 
     // compare password
     const isPasswordMatch = await bcrypt.compare(password, user.password);
 
     if (!isPasswordMatch) {
-      throw new NotFoundException('Invalid credentials.');
+      throw new NotFoundException(Lang.INVALID_CREDENTIALS);
     }
 
     const payload = { userId: user.id };
@@ -70,7 +78,7 @@ export class AuthService {
     const refreshToken = this.tokenService.generateRefreshToken(payload);
 
     return {
-      message: 'success',
+      message: Lang.SUCCESS,
       userDetails: user,
       accessToken,
       refreshToken,

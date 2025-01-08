@@ -19,6 +19,9 @@ export class CreateSongService {
       throw new NotFoundException(Lang.ARTIST_NOT_FOUND);
     }
 
-    return await this.songRepository.insertData({ ...createSongInput, artist });
+    return await this.songRepository.insertData({
+      ...createSongInput,
+      artist_id: artist.id,
+    });
   }
 }

@@ -1,14 +1,33 @@
-import { PaginationInput } from './../dto/input/pagination.input';
-export class BaseRepository {
-  private readonly collectionName;
+import { EntityManager, Repository } from 'typeorm';
 
-  constructor(collectionName) {
+export class BaseRepository<T> {
+  protected readonly collectionName: Repository<T>;
+  private readonly entityManager: EntityManager;
+
+  constructor(collectionName: Repository<T>, entityManager: EntityManager) {
     this.collectionName = collectionName;
+    this.entityManager = entityManager;
   }
 
   async insertData(value: any) {
-    const data = this.collectionName.create(value);
-    return await this.collectionName.save(data);
+    const table = this.collectionName.metadata.tableName;
+
+    // Get the keys of the provided object (i.e., column names)
+    const keys = Object.keys(value);
+    const columns = keys.map((item) => `"${item}"`).join(', ');
+    const values = keys.map((key) => `$${keys.indexOf(key) + 1}`).join(', ');
+
+    // Create the query dynamically
+    const query = `INSERT INTO ${table} (${columns}, "created_at", "updated_at") 
+    VALUES (${values}, NOW(), NOW()) 
+    RETURNING *`;
+
+    // Generate the parameters dynamically based on the value object
+    const parameters = [...keys.map((key) => value[key]), ...[]]; // Adding the values dynamically
+
+    const res = await this.entityManager.query(query, parameters);
+
+    return res[0];
   }
 
   async updateDataById(id: string, value: any) {
@@ -16,21 +35,28 @@ export class BaseRepository {
   }
 
   async findDataById(id: string) {
-    return await this.collectionName.findOne({ where: { id } });
+    const query = `SELECT * from ${this.collectionName.metadata.tableName} WHERE id = $1`;
+
+    const parameter = [id];
+
+    const result = await this.entityManager.query(query, parameter);
+
+    return result[0];
   }
 
   async findDataByCondition(condition: any = {}) {
     return await this.collectionName.findOne({ where: condition });
   }
+
   async findDataByConditionAndRelations(condition: any = {}, relations: any[]) {
     return await this.collectionName.findOne({ where: condition, relations });
   }
 
   async findAllDataWithRelations(condition: any, relationTable: string) {
-    return await this.collectionName.find(
-      { where: condition },
-      { relations: [relationTable] },
-    );
+    return await this.collectionName.find({
+      where: condition,
+      relations: [relationTable],
+    });
   }
 
   async findAllData(condition: any) {
@@ -38,34 +64,17 @@ export class BaseRepository {
   }
 
   async deleteById(id: string) {
-    return await this.collectionName.delete(id);
+    const query = `DELETE FROM ${this.collectionName.metadata.tableName} WHERE id = $1`;
+    try {
+      const result = await this.collectionName.query(query, [id]);
+      return result;
+    } catch (error) {
+      console.error('Error deleting data:', error);
+      throw new Error('Unable to delete the record');
+    }
   }
 
   async deleteByCondition(condition: any) {
     return await this.collectionName.delete(condition);
-  }
-
-  async findDataUsingPagination(
-    condition: any = {},
-    paginationInput: PaginationInput,
-    relations?: string[],
-  ) {
-    const { page, limit } = paginationInput;
-
-    const skip = (page - 1) * limit;
-
-    const query: any = {
-      where: condition,
-      take: limit,
-      skip,
-    };
-
-    if (relations && relations.length > 0) {
-      query.relations = relations;
-    }
-
-    const [result, total] = await this.collectionName.findAndCount(query);
-
-    return { result, total, totalPages: Math.ceil(total / limit) };
   }
 }

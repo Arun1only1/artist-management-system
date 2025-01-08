@@ -31,7 +31,8 @@ import { SongModule } from './song/song.module';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
         entities: [__dirname + '/../**/*.entity{.ts,.js}'], // Corrected path for entities
-        synchronize: true,
+        synchronize: configService.get('NODE_ENV') === 'dev',
+        logging: configService.get('NODE_ENV') === 'dev',
       }),
     }),
     UserModule,

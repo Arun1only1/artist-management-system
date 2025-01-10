@@ -3,8 +3,12 @@
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import ROUTES from "@/constant/route.constants";
+import { hasPermission } from "@/permissions/component.permission";
+import { Resource } from "@/permissions/resource.enum";
+import { Action } from "@/permissions/action.enum";
+import Loader from "@/components/Loader/Loader";
 
-const ProtectedRoute = ({
+const PublicRoute = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -29,16 +33,23 @@ const ProtectedRoute = ({
   }, []);
 
   useEffect(() => {
-    if (isMounted && !token) {
-      router.replace(ROUTES.LOGOUT);
+    if (isMounted && token) {
+      const homeRoute = hasPermission(Resource.USER, Action.READ)
+        ? ROUTES.HOME
+        : hasPermission(Resource.ARTIST, Action.READ)
+        ? ROUTES.ARTIST
+        : ROUTES.SONG;
+
+      router.replace(homeRoute);
     }
   }, [isMounted, token, router]);
 
-  if (!isMounted || !token) {
-    return null; // Optionally, you can return a loading spinner here
+  // Render children only if the user is not authenticated and the component is mounted
+  if (!isMounted || token) {
+    return <Loader />;
   }
 
   return <>{children}</>;
 };
 
-export default ProtectedRoute;
+export default PublicRoute;

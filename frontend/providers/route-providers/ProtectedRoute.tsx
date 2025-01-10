@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import ROUTES from "@/constant/route.constants";
+import Loader from "@/components/Loader/Loader";
 
 const ProtectedRoute = ({
   children,
@@ -35,7 +36,7 @@ const ProtectedRoute = ({
   }, [isMounted, token, router]);
 
   if (!isMounted || !token) {
-    return null; // Optionally, you can return a loading spinner here
+    return <Loader />;
   }
 
   return <>{children}</>;

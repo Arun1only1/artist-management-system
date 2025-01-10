@@ -6,6 +6,7 @@ import ROUTES from "@/constant/route.constants";
 import { hasPermission } from "@/permissions/component.permission";
 import { Resource } from "@/permissions/resource.enum";
 import { Action } from "@/permissions/action.enum";
+import Loader from "@/components/Loader/Loader";
 
 const PublicRoute = ({
   children,
@@ -45,7 +46,7 @@ const PublicRoute = ({
 
   // Render children only if the user is not authenticated and the component is mounted
   if (!isMounted || token) {
-    return null; // Optionally, return a loading spinner here
+    return <Loader />;
   }
 
   return <>{children}</>;

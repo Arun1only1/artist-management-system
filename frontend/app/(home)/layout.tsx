@@ -7,7 +7,7 @@ import ReduxToolkitProvider from "@/providers/ReduxToolkitProvider";
 import CustomSnackbar from "@/components/CustomSnackbar";
 import "../globals.css";
 import Navbar from "@/components/Header";
-import ProtectedRoute from "@/providers/route-providers/ProtectedRoute";
+import ProtectedRoute from "@/guards/ProtectedRoute";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

@@ -22,4 +22,6 @@ export const configValidationSchema = Joi.object({
   JWT_ACCESS_TOKEN_EXPIRES_IN: Joi.string().default('10m'),
   JWT_REFRESH_TOKEN_SECRET: Joi.string().required(),
   JWT_REFRESH_TOKEN_EXPIRES_IN: Joi.string().default('7d'),
+
+  FRONTEND_URL: Joi.string().required(),
 });

@@ -48,6 +48,7 @@ const UserTable = () => {
   const { isPending, data, isError } = useQuery({
     queryKey: ["get-user-list", page],
     queryFn: () => getUserList({ page, limit: DEFAULT_LIMIT }),
+    enabled: hasPermission(Resource.USER, Action.READ),
   });
 
   const userList: UserType[] = data?.data?.userList?.result || [];
@@ -68,7 +69,7 @@ const UserTable = () => {
     return <ErrorItem />;
   }
 
-  if (userList?.length === 0) {
+  if (userList?.length < 1) {
     return <NoItemFound />;
   }
 

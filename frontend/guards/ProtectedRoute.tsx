@@ -31,7 +31,7 @@ const ProtectedRoute = ({
 
   useEffect(() => {
     if (isMounted && !token) {
-      router.replace(ROUTES.LOGOUT);
+      router.replace(ROUTES.LOGIN);
     }
   }, [isMounted, token, router]);
 

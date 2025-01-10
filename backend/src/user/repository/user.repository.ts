@@ -21,6 +21,7 @@ export class UserRepository extends BaseRepository<User> {
   async findDataUsingPagination(
     userId: string,
     { page, limit }: PaginationInput,
+    excludeRole?: string,
   ) {
     const skip = getSkip(page, limit);
 
@@ -39,19 +40,39 @@ export class UserRepository extends BaseRepository<User> {
     ].map((item) => `"${item}"`);
 
     // Query to get the data
-    const query = `SELECT ${columns.join(', ')} FROM ${this.tableName} WHERE id <> $1 
-                  ORDER BY updated_at DESC
-                  LIMIT $2 OFFSET $3`;
+    let query = `SELECT ${columns.join(', ')} FROM ${this.tableName} WHERE id <> $1 
+       ORDER BY updated_at DESC
+       LIMIT $2 OFFSET $3`;
 
     // Query to get the total count of users
-    const countQuery = `SELECT COUNT(*) FROM ${this.tableName} WHERE id <> $1`;
+    let countQuery = `SELECT COUNT(*) FROM ${this.tableName} WHERE id <> $1`;
+
+    // parameters
+    let queryParameters = [userId, limit, skip];
+    let countParameters = [userId];
+
+    if (excludeRole) {
+      query = `SELECT ${columns.join(', ')} FROM ${this.tableName} WHERE id <> $1 
+      AND role <> $2
+       ORDER BY updated_at DESC
+       LIMIT $3 OFFSET $4`;
+
+      countQuery = `SELECT COUNT(*) FROM ${this.tableName} WHERE id <> $1 AND role <> $2`;
+
+      queryParameters = [userId, excludeRole, limit, skip];
+
+      countParameters = [userId, excludeRole];
+    }
 
     try {
       // Fetching the data
-      const res = await this.collectionName.query(query, [userId, limit, skip]);
+      const res = await this.collectionName.query(query, queryParameters);
 
       // Fetching the total count
-      const countRes = await this.collectionName.query(countQuery, [userId]);
+      const countRes = await this.collectionName.query(
+        countQuery,
+        countParameters,
+      );
 
       const totalRecords = +countRes[0]?.count;
 

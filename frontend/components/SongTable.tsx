@@ -18,6 +18,9 @@ import DeleteSongDialog from "./DeleteSongDialog";
 import Loader from "./Loader/Loader";
 import ErrorItem from "./ErrorItem";
 import NoItemFound from "./NoItemFound";
+import { hasPermission } from "@/permissions/component.permission";
+import { Resource } from "@/permissions/resource.enum";
+import { Action } from "@/permissions/action.enum";
 
 export interface SongProps {
   id: string;
@@ -32,14 +35,14 @@ const SongTable = ({ artistId }: { artistId?: string }) => {
   // page
   const [page, setPage] = useState(1);
 
-  const { isPending, data, error } = useQuery({
+  const { isPending, data, isError } = useQuery({
     queryKey: ["get-song-list", page],
     queryFn: () => {
       return getSongList({ page, limit: 10, artistId });
     },
+    enabled: hasPermission(Resource.SONG, Action.READ),
   });
 
-  console.log(data);
   const songList: SongProps[] = data?.data?.songList?.result || [];
   const totalPages: number = data?.data?.songList?.totalPages;
 
@@ -47,11 +50,11 @@ const SongTable = ({ artistId }: { artistId?: string }) => {
     return <Loader />;
   }
 
-  if (error) {
+  if (isError) {
     return <ErrorItem />;
   }
 
-  if (songList?.length === 0) {
+  if (songList?.length < 1) {
     return <NoItemFound />;
   }
 

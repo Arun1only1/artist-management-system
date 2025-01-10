@@ -7,18 +7,18 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
+import * as multer from 'multer';
+import { MAX_UPLOAD_FILE_SIZE } from 'src/constants/general.constants';
+import Lang from 'src/constants/language';
 import { Permissions } from 'src/decorators/permission.decorator';
 import { AuthorizationGuard } from 'src/guards/authorization.guard';
 import { Action } from 'src/user/enum/action.enum';
 import { Resource } from 'src/user/enum/resource.enum';
-import { DownloadCsvService } from './service/download.csv.service';
-import { FileInterceptor } from '@nestjs/platform-express';
-import * as multer from 'multer';
 import { convertMBToBytes } from 'src/utils/convert.mb.to.bytes';
-import { MAX_UPLOAD_FILE_SIZE } from 'src/constants/general.constants';
+import { DownloadCsvService } from './service/download.csv.service';
 import { UploadCsvService } from './service/upload.csv.service';
-import Lang from 'src/constants/language';
 
 @UseGuards(AuthorizationGuard)
 @Controller('csv')
@@ -49,7 +49,7 @@ export class CsvController {
       limits: { fileSize: convertMBToBytes(MAX_UPLOAD_FILE_SIZE) },
     }),
   )
-  async uploadCsv(@UploadedFile() file: Express.Multer.File) {
+  async uploadCsv(@UploadedFile() file: any) {
     await this.uploadCsvService.handleCSVUpload(file.buffer);
 
     return { message: Lang.CSV_UPLOAD_SUCCESSFUL };

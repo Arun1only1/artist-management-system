@@ -1,7 +1,7 @@
 import ROUTES from "@/constant/route.constants";
 import axios from "axios";
 
-const baseURL = "http://localhost:8080";
+const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 const $axios = axios.create({
   baseURL,

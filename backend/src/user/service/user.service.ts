@@ -9,6 +9,7 @@ import Lang from 'src/constants/language';
 import { UpdateUserInput } from '../dto/input/update.user.input';
 import { UserRepository } from '../repository/user.repository';
 import { PaginationInput } from './../dto/input/pagination.input';
+import { UserRole } from '../enum/user.role.enum';
 
 @Injectable()
 export class UserService {
@@ -18,6 +19,7 @@ export class UserService {
     return await this.userRepository.findDataUsingPagination(
       userId,
       paginationInput,
+      UserRole.ARTIST,
     );
   }
 

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Box,
@@ -11,30 +11,30 @@ import {
   Select,
   TextField,
   Typography,
-} from '@mui/material';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import dayjs from 'dayjs';
-import { Formik } from 'formik';
+} from "@mui/material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs from "dayjs";
+import { Formik } from "formik";
 
 import {
   DEFAULT_DATE_FORMAT,
   genderOptions,
   roleOptions,
-} from '@/constant/general.constant';
-import ROUTES from '@/constant/route.constants';
-import { getUserDetails, updateUser } from '@/lib/api-routes/user/user.routes';
+} from "@/constant/general.constant";
+import ROUTES from "@/constant/route.constants";
+import { getUserDetails, updateUser } from "@/lib/api-routes/user/user.routes";
 import {
   openErrorSnackbar,
   openSuccessSnackbar,
-} from '@/store/slices/snackbarSlice';
-import { getMessageFromError } from '@/utils/get.message.from.error';
-import { editUserValidationSchema } from '@/validation-schema/user/edit.user.validation.schema';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { useParams, useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
+} from "@/store/slices/snackbarSlice";
+import { getMessageFromError } from "@/utils/get.message.from.error";
+import { editUserValidationSchema } from "@/validation-schema/user/edit.user.validation.schema";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useParams, useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 
 export interface EditUserProps {
   firstName: string;
@@ -58,7 +58,7 @@ const EditUserForm = () => {
 
   //   get user details
   const { isPending: getUserDetailPending, data } = useQuery({
-    queryKey: ['get-user-details'],
+    queryKey: ["get-user-details"],
     queryFn: () => getUserDetails(userId as string),
   });
 
@@ -66,7 +66,7 @@ const EditUserForm = () => {
 
   //   update  user mutation
   const { isPending, mutate } = useMutation({
-    mutationKey: ['edit-user'],
+    mutationKey: ["edit-user"],
     mutationFn: async (values: EditUserProps) => {
       return await updateUser(userId as string, values);
     },
@@ -82,21 +82,21 @@ const EditUserForm = () => {
   return (
     <Box>
       {(isPending || getUserDetailPending) && (
-        <LinearProgress color='success' />
+        <LinearProgress color="success" />
       )}
       <Formik
         enableReinitialize
         initialValues={
           {
-            firstName: userDetails?.firstName || '',
-            lastName: userDetails?.lastName || '',
-            email: userDetails?.email || '',
+            firstName: userDetails?.firstName || "",
+            lastName: userDetails?.lastName || "",
+            email: userDetails?.email || "",
 
-            phone: userDetails?.phone || '',
-            address: userDetails?.address || '',
-            role: userDetails?.role || '',
+            phone: userDetails?.phone || "",
+            address: userDetails?.address || "",
+            role: userDetails?.role || "",
             dob: userDetails?.dob || null,
-            gender: userDetails?.gender || '',
+            gender: userDetails?.gender || "",
           } as EditUserProps
         }
         validationSchema={editUserValidationSchema}
@@ -112,12 +112,12 @@ const EditUserForm = () => {
           setFieldValue,
           values,
         }) => (
-          <form onSubmit={handleSubmit} className='form w-[450px] gap-4'>
-            <Typography variant='h4'>Edit User</Typography>
+          <form onSubmit={handleSubmit} className="form w-[400px] gap-4">
+            <Typography variant="h4">Edit User</Typography>
             <FormControl fullWidth>
               <TextField
-                label='First Name'
-                {...getFieldProps('firstName')}
+                label="First Name"
+                {...getFieldProps("firstName")}
                 error={!!errors.firstName && !!touched.firstName}
               />
               {touched.firstName && errors.firstName ? (
@@ -127,8 +127,8 @@ const EditUserForm = () => {
 
             <FormControl fullWidth>
               <TextField
-                label='Last Name'
-                {...getFieldProps('lastName')}
+                label="Last Name"
+                {...getFieldProps("lastName")}
                 error={!!errors.lastName && !!touched.lastName}
               />
               {touched.lastName && errors.lastName ? (
@@ -138,8 +138,8 @@ const EditUserForm = () => {
 
             <FormControl fullWidth>
               <TextField
-                label='Email'
-                {...getFieldProps('email')}
+                label="Email"
+                {...getFieldProps("email")}
                 error={!!errors.email && !!touched.email}
               />
               {touched.email && errors.email ? (
@@ -149,8 +149,8 @@ const EditUserForm = () => {
 
             <FormControl fullWidth>
               <TextField
-                label='Phone Number'
-                {...getFieldProps('phone')}
+                label="Phone Number"
+                {...getFieldProps("phone")}
                 error={!!errors.phone && !!touched.phone}
               />
               {touched.phone && errors.phone ? (
@@ -160,8 +160,8 @@ const EditUserForm = () => {
 
             <FormControl fullWidth>
               <TextField
-                label='Address'
-                {...getFieldProps('address')}
+                label="Address"
+                {...getFieldProps("address")}
                 error={!!errors.address && !!touched.address}
               />
               {touched.address && errors.address ? (
@@ -171,7 +171,7 @@ const EditUserForm = () => {
 
             <FormControl fullWidth>
               <InputLabel>Role</InputLabel>
-              <Select label='Role' {...getFieldProps('role')}>
+              <Select label="Role" {...getFieldProps("role")}>
                 {roleOptions.map((item) => (
                   <MenuItem key={item.id} value={item.value}>
                     {item.label}
@@ -185,7 +185,7 @@ const EditUserForm = () => {
 
             <FormControl fullWidth>
               <InputLabel>Gender</InputLabel>
-              <Select label='Gender' {...getFieldProps('gender')}>
+              <Select label="Gender" {...getFieldProps("gender")}>
                 {genderOptions.map((item) => (
                   <MenuItem key={item.id} value={item.value}>
                     {item.label}
@@ -199,19 +199,19 @@ const EditUserForm = () => {
 
             <FormControl fullWidth>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
+                <DemoContainer components={["DatePicker"]}>
                   <DatePicker
                     value={values?.dob ? dayjs(values?.dob) : null}
                     onChange={(date) => {
                       setFieldValue(
-                        'dob',
+                        "dob",
                         dayjs(date).format(DEFAULT_DATE_FORMAT)
                       );
                     }}
-                    label='DOB'
-                    className='w-full'
+                    label="DOB"
+                    className="w-full"
                     maxDate={dayjs()}
-                    minDate={dayjs('1900-01-01')}
+                    minDate={dayjs("1900-01-01")}
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -220,7 +220,13 @@ const EditUserForm = () => {
               ) : null}
             </FormControl>
 
-            <Button fullWidth type='submit' variant='contained' color='success'>
+            <Button
+              fullWidth
+              type="submit"
+              size="small"
+              color="success"
+              variant="contained"
+            >
               submit
             </Button>
           </form>

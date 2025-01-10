@@ -1,19 +1,14 @@
-import React from 'react';
-import './Loader.css'; // Create a separate CSS file for animations
+import React from "react";
 
-const Loader = () => {
+const Loader: React.FC = () => {
   return (
     <div
-      className='fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-90 z-50 fade-in-out'
-      aria-label='Loading'
+      className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+      role="status"
     >
-      <div className='flex flex-col items-center space-y-4'>
-        {/* Outer rotating circle */}
-        <div className='relative w-20 h-20 animate-spin-slow'>
-          <div className='absolute inset-0 rounded-full border-4 border-orange-500 border-opacity-30'></div>
-          <div className='absolute inset-0 rounded-full border-t-4 border-orange-500'></div>
-        </div>
-      </div>
+      <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+        Loading...
+      </span>
     </div>
   );
 };

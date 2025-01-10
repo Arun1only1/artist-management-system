@@ -11,6 +11,7 @@ import { TokenService } from 'src/token/token.service';
 import { UserService } from 'src/user/service/user.service';
 import { LoginUserInput } from './dto/input/login.user.input';
 import { RegisterUserInput } from './dto/input/register.user.input';
+import { userRoles } from 'src/user/roles/role.and.permission';
 
 @Injectable()
 export class AuthService {
@@ -77,11 +78,22 @@ export class AuthService {
 
     const refreshToken = this.tokenService.generateRefreshToken(payload);
 
+    // remove password from res
+    delete user.password;
+
+    // get user role and permission
+    const loggedInUserRole = user.role;
+
+    const userRoleAndPermission = userRoles.find(
+      (item) => item.name === loggedInUserRole,
+    );
+
     return {
       message: Lang.SUCCESS,
       userDetails: user,
       accessToken,
       refreshToken,
+      permissions: userRoleAndPermission?.permissions,
     };
   }
 }

@@ -47,6 +47,10 @@ const responseMessages = {
     SONG_UPDATED: 'Song is updated successfully.',
     SONG_NOT_FOUND: 'Song does not exist.',
     NOT_OWNER_OF_RESOURCE: 'You are not owner of this resource.',
+
+    // csv
+    CSV_UPLOAD_SUCCESSFUL: 'Csv upload is successful.',
+    INVALID_CSV_DATA: 'Invalid csv data',
   },
 };
 const lang = process.env.SYSTEM_LANGUAGE || 'EN';

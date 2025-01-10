@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { GlobalExceptionFilter } from './exception-filter/global.exception.handler';
 
 async function bootstrap() {
   const logger = new Logger('Backend', { timestamp: true });
@@ -12,6 +13,8 @@ async function bootstrap() {
   });
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   const PORT = process.env.API_PORT ?? 4000;
 

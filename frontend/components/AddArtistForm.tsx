@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import {
   Box,
   Button,
@@ -15,32 +15,32 @@ import {
   Select,
   TextField,
   Typography,
-} from '@mui/material';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import dayjs from 'dayjs';
-import { Formik } from 'formik';
+} from "@mui/material";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs from "dayjs";
+import { Formik } from "formik";
 
-import { Role } from '@/constant/enums/role.enum';
 import {
   DEFAULT_DATE_FORMAT,
   genderOptions,
-} from '@/constant/general.constant';
-import ROUTES from '@/constant/route.constants';
-import { addArtist } from '@/lib/api-routes/artist/artist.routes';
+} from "@/constant/general.constant";
+import ROUTES from "@/constant/route.constants";
+import { addArtist } from "@/lib/api-routes/artist/artist.routes";
 import {
   openErrorSnackbar,
   openSuccessSnackbar,
-} from '@/store/slices/snackbarSlice';
-import { getMessageFromError } from '@/utils/get.message.from.error';
-import { addArtistValidationSchema } from '@/validation-schema/artist/add.artist.validation.schema';
-import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import Loader from './Loader/Loader';
+} from "@/store/slices/snackbarSlice";
+import { getMessageFromError } from "@/utils/get.message.from.error";
+import { addArtistValidationSchema } from "@/validation-schema/artist/add.artist.validation.schema";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import Loader from "./Loader/Loader";
+import { Role } from "@/permissions/role.enum";
 
 export interface AddArtistFormValuesType {
   numberOfAlbums: number;
@@ -80,7 +80,7 @@ const AddArtistForm = () => {
 
   //   add  artist mutation
   const { isPending, mutate } = useMutation({
-    mutationKey: ['add-artist'],
+    mutationKey: ["add-artist"],
     mutationFn: async (values: AddArtistFormValuesType) => {
       return await addArtist({
         ...values,
@@ -106,14 +106,14 @@ const AddArtistForm = () => {
       <Formik
         initialValues={
           {
-            firstName: '',
-            lastName: '',
-            email: '',
-            password: '',
-            phone: '',
-            address: '',
-            dob: '',
-            gender: '',
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            phone: "",
+            address: "",
+            dob: "",
+            gender: "",
             firstReleaseYear: 1900,
             numberOfAlbums: 0,
           } as AddArtistFormValuesType
@@ -131,12 +131,12 @@ const AddArtistForm = () => {
           setFieldValue,
           values,
         }) => (
-          <form onSubmit={handleSubmit} className='form w-[450px] gap-4'>
-            <Typography variant='h4'>Add Artist</Typography>
+          <form onSubmit={handleSubmit} className="form w-[400px] gap-4">
+            <Typography variant="h5">Add Artist</Typography>
             <FormControl fullWidth>
               <TextField
-                label='First Name'
-                {...getFieldProps('firstName')}
+                label="First Name"
+                {...getFieldProps("firstName")}
                 error={!!errors.firstName && !!touched.firstName}
               />
 
@@ -147,8 +147,8 @@ const AddArtistForm = () => {
 
             <FormControl fullWidth>
               <TextField
-                label='Last Name'
-                {...getFieldProps('lastName')}
+                label="Last Name"
+                {...getFieldProps("lastName")}
                 error={!!errors.lastName && !!touched.lastName}
               />
               {touched.lastName && errors.lastName ? (
@@ -158,33 +158,33 @@ const AddArtistForm = () => {
 
             <FormControl fullWidth>
               <TextField
-                label='Email'
-                {...getFieldProps('email')}
+                label="Email"
+                {...getFieldProps("email")}
                 error={!!errors.email && !!touched.email}
               />
               {touched.email && errors.email ? (
                 <FormHelperText error>{errors.email}</FormHelperText>
               ) : null}
             </FormControl>
-            <FormControl variant='outlined' fullWidth>
+            <FormControl variant="outlined" fullWidth>
               <InputLabel>Password</InputLabel>
               <OutlinedInput
-                {...getFieldProps('password')}
-                type={showPassword ? 'text' : 'password'}
+                {...getFieldProps("password")}
+                type={showPassword ? "text" : "password"}
                 error={!!errors.email && !!touched.email}
                 endAdornment={
-                  <InputAdornment position='end'>
+                  <InputAdornment position="end">
                     <IconButton
                       onClick={handleClickShowPassword}
                       onMouseDown={handleMouseDownPassword}
                       onMouseUp={handleMouseUpPassword}
-                      edge='end'
+                      edge="end"
                     >
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
                 }
-                label='Password'
+                label="Password"
               />
               {touched.password && errors.password && (
                 <FormHelperText error>{errors.password}</FormHelperText>
@@ -193,8 +193,8 @@ const AddArtistForm = () => {
 
             <FormControl fullWidth>
               <TextField
-                label='Phone Number'
-                {...getFieldProps('phone')}
+                label="Phone Number"
+                {...getFieldProps("phone")}
                 error={!!errors.phone && !!touched.phone}
               />
               {touched.phone && errors.phone ? (
@@ -204,8 +204,8 @@ const AddArtistForm = () => {
 
             <FormControl fullWidth>
               <TextField
-                label='Address'
-                {...getFieldProps('address')}
+                label="Address"
+                {...getFieldProps("address")}
                 error={!!errors.address && !!touched.address}
               />
               {touched.address && errors.address ? (
@@ -215,7 +215,7 @@ const AddArtistForm = () => {
 
             <FormControl fullWidth>
               <InputLabel>Gender</InputLabel>
-              <Select label='Gender' {...getFieldProps('gender')}>
+              <Select label="Gender" {...getFieldProps("gender")}>
                 {genderOptions.map((item) => (
                   <MenuItem key={item.id} value={item.value}>
                     {item.label}
@@ -229,19 +229,19 @@ const AddArtistForm = () => {
 
             <FormControl fullWidth>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
+                <DemoContainer components={["DatePicker"]}>
                   <DatePicker
                     value={values?.dob ? dayjs(values?.dob) : null}
                     onChange={(date) => {
                       setFieldValue(
-                        'dob',
+                        "dob",
                         dayjs(date).format(DEFAULT_DATE_FORMAT)
                       );
                     }}
-                    label='DOB'
-                    className='w-full'
+                    label="DOB"
+                    className="w-full"
                     maxDate={dayjs()}
-                    minDate={dayjs('1900-01-01')}
+                    minDate={dayjs("1900-01-01")}
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -252,9 +252,9 @@ const AddArtistForm = () => {
 
             <FormControl fullWidth>
               <TextField
-                type='number'
-                label='Number Of Albums'
-                {...getFieldProps('numberOfAlbums')}
+                type="number"
+                label="Number Of Albums"
+                {...getFieldProps("numberOfAlbums")}
                 error={!!errors.numberOfAlbums && !!touched.numberOfAlbums}
               />
               {touched.numberOfAlbums && errors.numberOfAlbums ? (
@@ -264,20 +264,20 @@ const AddArtistForm = () => {
 
             <FormControl fullWidth>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker', 'DatePicker']}>
+                <DemoContainer components={["DatePicker", "DatePicker"]}>
                   <DatePicker
                     onChange={(date) => {
                       setFieldValue(
-                        'firstReleaseYear',
-                        dayjs(date).format('YYYY')
+                        "firstReleaseYear",
+                        dayjs(date).format("YYYY")
                       );
                     }}
                     maxDate={dayjs()}
-                    yearsOrder='desc'
-                    label={'First release year'}
-                    openTo='year'
-                    views={['year']}
-                    className='w-full'
+                    yearsOrder="desc"
+                    label={"First release year"}
+                    openTo="year"
+                    views={["year"]}
+                    className="w-full"
                   />
                 </DemoContainer>
               </LocalizationProvider>
@@ -285,7 +285,13 @@ const AddArtistForm = () => {
                 <FormHelperText error>{errors.firstReleaseYear}</FormHelperText>
               )}
             </FormControl>
-            <Button fullWidth type='submit' variant='contained' color='success'>
+            <Button
+              fullWidth
+              type="submit"
+              variant="contained"
+              color="success"
+              size="small"
+            >
               submit
             </Button>
           </form>

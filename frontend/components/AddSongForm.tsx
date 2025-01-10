@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { Formik } from 'formik';
+import { Formik } from "formik";
 
 import {
   Box,
@@ -13,18 +13,18 @@ import {
   Select,
   TextField,
   Typography,
-} from '@mui/material';
+} from "@mui/material";
 
-import { genreOptions } from '@/constant/general.constant';
-import { addSong } from '@/lib/api-routes/song/song.routes';
+import { genreOptions } from "@/constant/general.constant";
+import { addSong } from "@/lib/api-routes/song/song.routes";
 import {
   openErrorSnackbar,
   openSuccessSnackbar,
-} from '@/store/slices/snackbarSlice';
-import { getMessageFromError } from '@/utils/get.message.from.error';
-import { addSongValidationSchema } from '@/validation-schema/song/add.song.validation.schema';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useDispatch } from 'react-redux';
+} from "@/store/slices/snackbarSlice";
+import { getMessageFromError } from "@/utils/get.message.from.error";
+import { addSongValidationSchema } from "@/validation-schema/song/add.song.validation.schema";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
 
 export interface AddSongProps {
   title: string;
@@ -39,12 +39,12 @@ const AddSongForm = ({ handleClose }: { handleClose: () => void }) => {
   const queryClient = useQueryClient();
   //   register user mutation
   const { isPending, mutate } = useMutation({
-    mutationKey: ['add-song'],
+    mutationKey: ["add-song"],
     mutationFn: async (values: AddSongProps) => {
       return await addSong(values);
     },
     onSuccess: (res) => {
-      queryClient.refetchQueries({ queryKey: ['get-song-list'] });
+      queryClient.refetchQueries({ queryKey: ["get-song-list"] });
       dispatch(openSuccessSnackbar({ message: res?.data?.message }));
     },
     onError: (error) => {
@@ -56,12 +56,12 @@ const AddSongForm = ({ handleClose }: { handleClose: () => void }) => {
   });
   return (
     <Box>
-      {isPending && <LinearProgress color='success' />}
+      {isPending && <LinearProgress color="success" />}
       <Formik
         initialValues={{
-          title: '',
-          albumName: '',
-          genre: '',
+          title: "",
+          albumName: "",
+          genre: "",
         }}
         validationSchema={addSongValidationSchema}
         onSubmit={(values) => {
@@ -69,12 +69,12 @@ const AddSongForm = ({ handleClose }: { handleClose: () => void }) => {
         }}
       >
         {({ handleSubmit, getFieldProps, errors, touched }) => (
-          <form onSubmit={handleSubmit} className='form w-[450px] gap-4'>
-            <Typography variant='h4'>Add Song</Typography>
+          <form onSubmit={handleSubmit} className="form w-[400px] gap-4">
+            <Typography variant="h4">Add Song</Typography>
             <FormControl fullWidth>
               <TextField
-                label='Title'
-                {...getFieldProps('title')}
+                label="Title"
+                {...getFieldProps("title")}
                 error={!!errors.title && !!touched.title}
                 helperText={errors.title && touched.title && errors.title}
               />
@@ -82,8 +82,8 @@ const AddSongForm = ({ handleClose }: { handleClose: () => void }) => {
 
             <FormControl fullWidth>
               <TextField
-                label='Album Name'
-                {...getFieldProps('albumName')}
+                label="Album Name"
+                {...getFieldProps("albumName")}
                 error={!!errors.albumName && !!touched.albumName}
                 helperText={
                   errors.albumName && touched.albumName && errors.albumName
@@ -93,7 +93,7 @@ const AddSongForm = ({ handleClose }: { handleClose: () => void }) => {
 
             <FormControl fullWidth>
               <InputLabel>Genre</InputLabel>
-              <Select label='Genre' {...getFieldProps('genre')}>
+              <Select label="Genre" {...getFieldProps("genre")}>
                 {genreOptions.map((item) => (
                   <MenuItem key={item.id} value={item.value}>
                     {item.label}
@@ -105,7 +105,13 @@ const AddSongForm = ({ handleClose }: { handleClose: () => void }) => {
               )}
             </FormControl>
 
-            <Button fullWidth type='submit' variant='contained' color='success'>
+            <Button
+              fullWidth
+              type="submit"
+              variant="contained"
+              color="success"
+              size="small"
+            >
               submit
             </Button>
           </form>

@@ -1,6 +1,6 @@
-import { AddSongProps } from '@/app/(home)/song/add/page';
-import $axios from '../../axios/axios.instance';
-import { SongDataProps } from '@/components/EditSongForm';
+import { AddSongProps } from "@/components/AddSongForm";
+import $axios from "../../axios/axios.instance";
+import { SongDataProps } from "@/components/EditSongForm";
 
 interface GetSongListProps {
   page: number;
@@ -10,7 +10,7 @@ interface GetSongListProps {
 
 // add song
 export const addSong = async (values: AddSongProps) => {
-  return await $axios.post('/song/add', values);
+  return await $axios.post("/song/add", values);
 };
 
 // get song list
@@ -19,7 +19,7 @@ export const getSongList = async ({
   limit,
   artistId,
 }: GetSongListProps) => {
-  return await $axios.post('/song/list', {
+  return await $axios.post("/song/list", {
     page,
     limit,
     artistId: artistId || undefined,

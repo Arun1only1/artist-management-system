@@ -1,21 +1,23 @@
-'use client';
+"use client";
 
-import ROUTES from '@/constant/route.constants';
-import { getSongList } from '@/lib/api-routes/song/song.routes';
-import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
-import { Pagination, Tooltip, Typography } from '@mui/material';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import DeleteSongDialog from './DeleteSongDialog';
-import Loader from './Loader/Loader';
+import ROUTES from "@/constant/route.constants";
+import { getSongList } from "@/lib/api-routes/song/song.routes";
+import EditNoteOutlinedIcon from "@mui/icons-material/EditNoteOutlined";
+import { Pagination, Tooltip, Typography } from "@mui/material";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import DeleteSongDialog from "./DeleteSongDialog";
+import Loader from "./Loader/Loader";
+import ErrorItem from "./ErrorItem";
+import NoItemFound from "./NoItemFound";
 
 export interface SongProps {
   id: string;
@@ -29,52 +31,60 @@ const SongTable = ({ artistId }: { artistId?: string }) => {
   const router = useRouter();
   // page
   const [page, setPage] = useState(1);
-  const { isPending, data } = useQuery({
-    queryKey: ['get-song-list', page],
+
+  const { isPending, data, error } = useQuery({
+    queryKey: ["get-song-list", page],
     queryFn: () => {
       return getSongList({ page, limit: 10, artistId });
     },
-    // TODO:error handle
   });
 
   console.log(data);
-  const songList: SongProps[] = data?.data?.songList?.result;
+  const songList: SongProps[] = data?.data?.songList?.result || [];
   const totalPages: number = data?.data?.songList?.totalPages;
 
   if (isPending) {
     return <Loader />;
   }
 
+  if (error) {
+    return <ErrorItem />;
+  }
+
+  if (songList?.length === 0) {
+    return <NoItemFound />;
+  }
+
   return (
-    <div className='w-screen  lg:w-4/5 flex flex-col justify-center items-center '>
+    <div className="w-screen  lg:w-4/5 flex flex-col justify-center items-center ">
       <TableContainer
         component={Paper}
         sx={{ boxShadow: 3 }}
-        className='overflow-x-auto w-full'
+        className="overflow-x-auto w-full"
       >
         <Typography
-          variant='h6'
-          component='div'
-          sx={{ marginBottom: 2, ml: '1rem' }}
+          variant="h6"
+          component="div"
+          sx={{ marginBottom: 2, ml: "1rem" }}
         >
           Song List
         </Typography>
-        <Table className='w-full min-w-[600px]'>
+        <Table className="w-full min-w-[600px]">
           <TableHead>
-            <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 S.N.
               </TableCell>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 Title
               </TableCell>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 Album Name
               </TableCell>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 Genre
               </TableCell>
-              <TableCell align='center' sx={{ fontWeight: 'bold' }}>
+              <TableCell align="center" sx={{ fontWeight: "bold" }}>
                 Actions
               </TableCell>
             </TableRow>
@@ -84,26 +94,26 @@ const SongTable = ({ artistId }: { artistId?: string }) => {
               <TableRow
                 key={item.id}
                 sx={{
-                  '&:last-child td, &:last-child th': { border: 0 },
-                  '&:hover': { backgroundColor: '#f1f1f1' },
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  "&:hover": { backgroundColor: "#f1f1f1" },
                 }}
               >
-                <TableCell align='center'>{index + 1}</TableCell>
-                <TableCell align='center' className='capitalize'>
+                <TableCell align="center">{index + 1}</TableCell>
+                <TableCell align="center" className="capitalize">
                   {item.title}
                 </TableCell>
-                <TableCell align='center' className='capitalize'>
+                <TableCell align="center" className="capitalize">
                   {item.albumName}
                 </TableCell>
-                <TableCell align='center' className='capitalize'>
+                <TableCell align="center" className="capitalize">
                   {item.genre}
                 </TableCell>
-                <TableCell align='center'>
-                  <div className='flex justify-center items-center'>
+                <TableCell align="center">
+                  <div className="flex justify-center items-center">
                     <DeleteSongDialog songId={item.id} />
-                    <Tooltip title='Edit'>
+                    <Tooltip title="Edit">
                       <EditNoteOutlinedIcon
-                        className='text-green-500 cursor-pointer'
+                        className="text-green-500 cursor-pointer"
                         onClick={() => {
                           router.push(`${ROUTES.EDIT_SONG}/${item.id}`);
                         }}
@@ -119,8 +129,8 @@ const SongTable = ({ artistId }: { artistId?: string }) => {
       <Pagination
         page={page}
         count={totalPages}
-        color='secondary'
-        className='my-12'
+        color="secondary"
+        className="my-12"
         onChange={(_, pageNumber) => {
           setPage(pageNumber);
         }}

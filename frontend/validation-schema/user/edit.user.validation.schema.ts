@@ -1,4 +1,4 @@
-import * as Yup from 'yup';
+import * as Yup from "yup";
 import {
   ADDRESS_MAX_LENGTH,
   EMAIL_MAX_LENGTH,
@@ -6,12 +6,12 @@ import {
   LAST_NAME_MAX_LENGTH,
   PHONE_MAX_LENGTH,
   PHONE_MIN_LENGTH,
-} from '../../constant/general.constant';
+} from "../../constant/general.constant";
 
-import MSG from '../../constant/validation.messages';
+import MSG from "../../constant/validation.messages";
 
-import { Gender } from '../../constant/enums/gender.enum';
-import { Role } from '../../constant/enums/role.enum';
+import { Gender } from "../../constant/enums/gender.enum";
+import { Role } from "@/permissions/role.enum";
 
 export const editUserValidationSchema = Yup.object({
   firstName: Yup.string()
@@ -39,8 +39,8 @@ export const editUserValidationSchema = Yup.object({
   role: Yup.string()
     .required(MSG.ROLE_REQUIRED)
     .oneOf(
-      [Role.SUPER_ADMIN, Role.ARTIST_MANAGER, Role.ARTIST],
-      MSG.ROLE_OPTIONS
+      [Role.SUPER_ADMIN, Role.ARTIST_MANAGER],
+      MSG.ROLE_ADMIN_OR_ARTIST_MANAGER
     ),
 
   dob: Yup.date().required(MSG.DOB_REQUIRED),

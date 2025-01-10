@@ -7,6 +7,7 @@ import ReduxToolkitProvider from "@/providers/ReduxToolkitProvider";
 import CustomSnackbar from "@/components/CustomSnackbar";
 import "../globals.css";
 import Navbar from "@/components/Header";
+import ProtectedRoute from "@/providers/route-providers/ProtectedRoute";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,13 +34,15 @@ export default function RootLayout({
       <body
         className={` ${geistSans.variable} ${geistMono.variable} antialiased `}
       >
-        <ReduxToolkitProvider>
-          <ReactQueryClientProvider>
-            <CustomSnackbar />
-            <Navbar />
-            {children}
-          </ReactQueryClientProvider>
-        </ReduxToolkitProvider>
+        <ProtectedRoute>
+          <ReduxToolkitProvider>
+            <ReactQueryClientProvider>
+              <CustomSnackbar />
+              <Navbar />
+              {children}
+            </ReactQueryClientProvider>
+          </ReduxToolkitProvider>
+        </ProtectedRoute>
       </body>
     </html>
   );

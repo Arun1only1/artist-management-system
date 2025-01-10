@@ -42,11 +42,12 @@ const ArtistTable = () => {
   const router = useRouter();
   // page
   const [page, setPage] = useState(1);
-  const { isPending, data, error } = useQuery({
+  const { isPending, data, isError } = useQuery({
     queryKey: ["get-artist-list", page],
     queryFn: () => {
       return getArtistList({ page, limit: 10 });
     },
+    enabled: hasPermission(Resource.ARTIST, Action.READ),
   });
 
   const artistList: ArtistProps[] = data?.data?.artistList?.result;
@@ -56,11 +57,11 @@ const ArtistTable = () => {
     return <Loader />;
   }
 
-  if (error) {
+  if (isError) {
     return <ErrorItem />;
   }
 
-  if (!artistList.length) {
+  if (artistList.length < 1) {
     return <NoItemFound />;
   }
   return (

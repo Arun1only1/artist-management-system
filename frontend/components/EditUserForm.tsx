@@ -22,7 +22,7 @@ import { Formik } from "formik";
 import {
   DEFAULT_DATE_FORMAT,
   genderOptions,
-  roleOptions,
+  registerUserRoleOptions,
 } from "@/constant/general.constant";
 import ROUTES from "@/constant/route.constants";
 import { getUserDetails, updateUser } from "@/lib/api-routes/user/user.routes";
@@ -172,7 +172,7 @@ const EditUserForm = () => {
             <FormControl fullWidth>
               <InputLabel>Role</InputLabel>
               <Select label="Role" {...getFieldProps("role")}>
-                {roleOptions.map((item) => (
+                {registerUserRoleOptions.map((item) => (
                   <MenuItem key={item.id} value={item.value}>
                     {item.label}
                   </MenuItem>

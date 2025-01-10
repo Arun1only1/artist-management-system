@@ -11,7 +11,7 @@ const LogoutPage = () => {
     if (typeof window !== "undefined") {
       // Clear localStorage and handle redirect
       window.localStorage.clear();
-      router.push(ROUTES.LOGIN);
+      router.replace(ROUTES.LOGIN);
     }
   }, [router]);
 

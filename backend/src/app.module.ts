@@ -25,13 +25,13 @@ import { configValidationSchema } from './config/config.validation';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        type: configService.get<string>('DB_TYPE') as any, // Cast to any if the type is not recognized
+        type: 'postgres', // Cast to any if the type is not recognized
         host: configService.get<string>('DB_HOST'),
         port: configService.get<number>('DB_PORT'),
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        entities: [__dirname + '/../**/*.entity{.ts,.js}'], // Corrected path for entities
+        entities: ['dist/**/*.entity.js'],
         synchronize: configService.get('NODE_ENV') === 'dev',
         logging: configService.get('NODE_ENV') === 'dev',
       }),

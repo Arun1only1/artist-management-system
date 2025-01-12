@@ -10,7 +10,7 @@ export const configValidationSchema = Joi.object({
 
   SYSTEM_LANGUAGE: Joi.string().required().trim(),
 
-  DB_TYPE: Joi.string().required().trim(),
+  DB_TYPE: Joi.string().default('postgres').trim(),
   DB_HOST: Joi.string().required().trim(),
   DB_PORT: Joi.number().required(),
   DB_USERNAME: Joi.string().required().trim(),

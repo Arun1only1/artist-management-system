@@ -1,10 +1,10 @@
 import ROUTES from "@/constant/route.constants";
 import axios from "axios";
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL;
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const $axios = axios.create({
-  baseURL,
+  baseURL: apiUrl,
   timeout: 10000,
 });
 

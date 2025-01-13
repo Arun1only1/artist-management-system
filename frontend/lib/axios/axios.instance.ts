@@ -1,7 +1,7 @@
 import ROUTES from "@/constant/route.constants";
 import axios from "axios";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+const apiUrl = "http://localhost:8080";
 
 const $axios = axios.create({
   baseURL: apiUrl,
@@ -44,7 +44,7 @@ const refreshAccessToken = async () => {
   }
 
   try {
-    const response = await axios.post(`${baseURL}/auth/refresh-token`, {
+    const response = await axios.post(`${apiUrl}/auth/refresh-token`, {
       refreshToken,
     });
 

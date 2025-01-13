@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Controller,
   Get,
   Post,
@@ -50,6 +51,12 @@ export class CsvController {
     }),
   )
   async uploadCsv(@UploadedFile() file: any) {
+    const fileExtension = file?.originalname?.split('.').pop();
+
+    if (fileExtension !== 'csv') {
+      throw new BadRequestException('Please provide csv file.');
+    }
+
     await this.uploadCsvService.handleCSVUpload(file.buffer);
 
     return { message: Lang.CSV_UPLOAD_SUCCESSFUL };

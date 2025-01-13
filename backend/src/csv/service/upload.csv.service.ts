@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { queue } from 'async';
 import * as csv from 'csv-parser';
 import { CreateArtistService } from 'src/artist/service/create.artist.service';
+import { validateData } from 'src/utils/validate.data';
 import { PassThrough } from 'stream';
 import { DataSource, QueryRunner } from 'typeorm';
+import { artistValidationSchema } from '../validation-schema/artist.validation.schema';
 
 @Injectable()
 export class UploadCsvService {
@@ -22,7 +24,11 @@ export class UploadCsvService {
     bufferStream.end(fileBuffer);
 
     const processBatch = async (batch) => {
-      await this.createArtistService.insertArtistInBulk(batch);
+      await validateData(artistValidationSchema, batch);
+      await this.createArtistService.insertArtistInBulk(
+        Array.isArray(batch) ? batch : [batch],
+        queryRunner,
+      );
     };
 
     const batchQueue = queue(processBatch, 1); // Process one batch at a time
@@ -38,15 +44,26 @@ export class UploadCsvService {
             batch.push(data);
 
             if (batch.length >= batchSize) {
-              batchQueue.push(batch);
+              batchQueue.push(batch, (err) => {
+                if (err) {
+                  reject(err);
+                }
+              });
               batch = [];
             }
           })
           .on('end', () => {
             if (batch.length > 0) {
-              batchQueue.push(batch);
+              batchQueue.push(batch, (err) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  batchQueue.drain(() => resolve(true)); // Wait for all batches to finish
+                }
+              });
+            } else {
+              batchQueue.drain(() => resolve(true)); // Wait for all batches to finish
             }
-            batchQueue.drain(() => resolve(true)); // Wait for all batches to finish
           })
           .on('error', (error) => {
             reject(error);
@@ -58,7 +75,7 @@ export class UploadCsvService {
     } catch (error) {
       await queryRunner.rollbackTransaction();
       console.error('Error processing CSV:', error.message);
-      throw new Error('Failed to process CSV file');
+      throw new BadRequestException('Failed to process CSV file');
     } finally {
       await queryRunner.release();
     }

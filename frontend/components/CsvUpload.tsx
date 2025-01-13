@@ -1,13 +1,14 @@
+"use client";
 import $axios from "@/lib/axios/axios.instance";
 import { Button, styled, Typography } from "@mui/material";
 import { useState } from "react";
 
+import { openErrorSnackbar } from "@/store/slices/snackbarSlice";
+import { getMessageFromError } from "@/utils/get.message.from.error";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import Loader from "./Loader/Loader";
 import { useDispatch } from "react-redux";
-import { openErrorSnackbar } from "@/store/slices/snackbarSlice";
-import Lang from "@/constant/response.message";
+import Loader from "./Loader/Loader";
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -19,6 +20,8 @@ const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
+type QueryKey = ["get-artist-list"];
+
 const CsvUpload = () => {
   const [file, setFile] = useState<File | null>(null);
   const dispatch = useDispatch();
@@ -43,11 +46,13 @@ const CsvUpload = () => {
       });
     },
     onSuccess: () => {
-      console.log("success");
-      queryClient.invalidateQueries({ queryKey: "get-artist-list" });
+      const queryKey: QueryKey = ["get-artist-list"];
+
+      // @ts-expect-error: Suppress this type check error
+      queryClient.invalidateQueries(queryKey);
     },
-    onError: () => {
-      dispatch(openErrorSnackbar({ message: Lang.SOMETHING_WENT_WRONG }));
+    onError: (error) => {
+      dispatch(openErrorSnackbar({ message: getMessageFromError(error) }));
     },
   });
 
@@ -55,6 +60,15 @@ const CsvUpload = () => {
     if (!file) {
       return;
     }
+
+    const fileExtension = file?.name?.split(".")?.pop()?.toLowerCase();
+
+    if (fileExtension !== "csv") {
+      dispatch(openErrorSnackbar({ message: "Please upload csv file." }));
+      return;
+    }
+
+    console.log({ file });
 
     const formData = new FormData();
     formData.append("file", file);

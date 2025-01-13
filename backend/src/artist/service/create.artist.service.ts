@@ -1,19 +1,18 @@
 import {
   ConflictException,
   Injectable,
-  InternalServerErrorException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { SALT_ROUNDS } from 'src/constants/general.constants';
 import Lang from 'src/constants/language';
-import { artistValidationSchema } from 'src/csv/validation-schema/artist.validation.schema';
+import { User } from 'src/user/entities/user.entity';
 import { UserRole } from 'src/user/enum/user.role.enum';
 import { UserService } from 'src/user/service/user.service';
-import { validateData } from 'src/utils/validate.data';
 import { DataSource, QueryRunner } from 'typeorm';
 import { CreateArtistInput } from '../dto/input/create.artist.input';
 import { RegisterArtistInput } from '../dto/input/register.artist.input';
+import { Artist } from '../entities/artist.entity';
 import { ArtistRepository } from '../repository/artist.repository';
 
 @Injectable()
@@ -39,18 +38,21 @@ export class CreateArtistService {
     });
   }
 
-  async registerArtist({
-    firstName,
-    lastName,
-    email,
-    password,
-    address,
-    dob,
-    phone,
-    gender,
-    firstReleaseYear,
-    numberOfAlbums,
-  }: RegisterArtistInput) {
+  async registerArtist(
+    {
+      firstName,
+      lastName,
+      email,
+      password,
+      address,
+      dob,
+      phone,
+      gender,
+      firstReleaseYear,
+      numberOfAlbums,
+    }: RegisterArtistInput,
+    queryRunner?: QueryRunner,
+  ) {
     try {
       const user = await this.userService.findUserByEmail(email);
 
@@ -60,72 +62,45 @@ export class CreateArtistService {
 
       const hashedPassword = await bcrypt.hash(password, this.saltRounds);
 
-      // transaction
-      const queryRunner: QueryRunner = this.dataSource.createQueryRunner();
+      const manager = queryRunner
+        ? queryRunner.manager
+        : this.dataSource.manager;
 
-      // Establish database connection
-      await queryRunner.connect();
+      const newUser = await manager.save(User, {
+        // Use the User entity
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+        address,
+        phone,
+        dob,
+        gender,
+        role: UserRole.ARTIST,
+      });
 
-      // Start the transaction
-      await queryRunner.startTransaction();
+      const newArtist = await manager.save(Artist, {
+        // Use the Artist entity
+        name: `${firstName} ${lastName}`,
+        numberOfAlbums,
+        firstReleaseYear,
+        user: newUser,
+      });
 
-      try {
-        const newUser = await this.userService.addUser({
-          firstName,
-          lastName,
-          email,
-          password: hashedPassword,
-          address,
-          phone,
-          dob,
-          gender,
-          role: UserRole.ARTIST,
-        });
-
-        const newArtist = await this.createArtist({
-          name: `${firstName} ${lastName}`,
-          numberOfAlbums,
-          firstReleaseYear,
-          user: newUser,
-        });
-
-        await queryRunner.commitTransaction();
-
-        return newArtist;
-      } catch (error) {
-        await queryRunner.rollbackTransaction();
-        throw new InternalServerErrorException(
-          'Transaction failed',
-          error.message,
-        );
-      } finally {
-        // Release the queryRunner
-        await queryRunner.release();
-      }
+      return newArtist;
     } catch (error) {
-      console.log('error', error.message);
+      console.error('Error during artist registration:', error.message);
+      throw new UnprocessableEntityException('Artist registration failed');
     }
   }
 
   async insertArtistInBulk(
-    artistData: RegisterArtistInput | RegisterArtistInput[],
+    artistData: RegisterArtistInput[],
+    queryRunner: QueryRunner,
   ) {
     try {
-      const artistArray = Array.isArray(artistData) ? artistData : [artistData];
-
-      // Validate all artist data before processing
-      await Promise.all(
-        artistArray.map((item) =>
-          validateData(artistValidationSchema, {
-            ...item,
-            numberOfAlbums: +item.numberOfAlbums,
-            firstReleaseYear: +item.firstReleaseYear,
-          }),
-        ),
-      );
-
-      for (const artist of artistArray) {
-        await this.registerArtist(artist);
+      for (const artist of artistData) {
+        await this.registerArtist(artist, queryRunner);
       }
     } catch (error) {
       console.error('Error during artist insertion:', error.message);
